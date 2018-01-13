@@ -45,7 +45,7 @@ function gui(stackHelper) {
         Invertir_Eje_Y: false,
         Rotar_Derecha: false,
         rotate: 0,
-        orientation: 'default',
+        Orientacion: 'default',
         convention: 'radio',
     };
 
@@ -71,7 +71,7 @@ function gui(stackHelper) {
         .step(1)
         .listen();
 
-    let orientationUpdate = cameraFolder.add(camUtils, 'orientation', ['default', 'axial', 'coronal', 'sagittal']);
+    let orientationUpdate = cameraFolder.add(camUtils, 'Orientacion', ['axial', 'coronal', 'sagittal']);
     orientationUpdate.onChange(function (value) {
         camera.orientation = value;
         camera.update();
