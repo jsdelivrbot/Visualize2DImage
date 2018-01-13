@@ -41,7 +41,7 @@ function gui(stackHelper) {
     customContainer.appendChild(gui.domElement);
     // only reason to use this object is to satusfy data.GUI
     var camUtils = {
-        Invertir_Imagen_Eje_Y: false,
+        Invertir_Eje_X: false,
         invertColumns: false,
         rotate45: false,
         rotate: 0,
@@ -51,8 +51,8 @@ function gui(stackHelper) {
 
     // camera
     var cameraFolder = gui.addFolder('Camera');
-    var Invertir_Imagen_Eje_Y = cameraFolder.add(camUtils, 'Invertir_Imagen_Eje_Y');
-    Invertir_Imagen_Eje_Y.onChange(function () {
+    var Invertir_Eje_X = cameraFolder.add(camUtils, 'Invertir_Eje_X');
+    Invertir_Eje_X.onChange(function () {
         camera.invertRows();
     });
 
