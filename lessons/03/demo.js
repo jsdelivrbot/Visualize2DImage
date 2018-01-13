@@ -126,7 +126,9 @@ loader
 
 
         var stack = createStackOfASeriesOfImages();
-        loader.free();
+
+
+        detachLoaderAndProgressBarFromDOM();
         loader = null;
         // be carefull that series and target stack exist!
         var stackHelper = new AMI.StackHelper(stack);
@@ -176,6 +178,10 @@ loader
 
         function createStackOfASeriesOfImages() {
             return series[0].stack[0];
+        }
+
+        function detachLoaderAndProgressBarFromDOM() {
+            loader.free();
         }
     })
     .catch(function (error) {
