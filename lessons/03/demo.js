@@ -4,26 +4,20 @@
 var newRenderer = setRenderer();
 var container = newRenderer.container;
 var renderer = newRenderer.renderer;
-
 var scene = new THREE.Scene();
-
-
 var camera = setCamera();
-
-
-// Setup controls
 var controls = setControls();
 
 /**
  * Handle window resize
  */
 function onWindowResize() {
+    const numberOfDirectionsToRecalculateZoom = 2;
     camera.canvas = {
         width: container.offsetWidth,
         height: container.offsetHeight,
     };
-    camera.fitBox(2);
-
+    camera.fitBox(numberOfDirectionsToRecalculateZoom);
     renderer.setSize(container.offsetWidth, container.offsetHeight);
 }
 
