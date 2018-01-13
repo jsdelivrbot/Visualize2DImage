@@ -43,7 +43,7 @@ function gui(stackHelper) {
     var camUtils = {
         Invertir_Eje_X: false,
         Invertir_Eje_Y: false,
-        rotate45: false,
+        Rotar_Derecha: false,
         rotate: 0,
         orientation: 'default',
         convention: 'radio',
@@ -61,8 +61,8 @@ function gui(stackHelper) {
         camera.invertColumns();
     });
 
-    var rotate45 = cameraFolder.add(camUtils, 'rotate45');
-    rotate45.onChange(function () {
+    var Rotar_Derecha = cameraFolder.add(camUtils, 'Rotar_Derecha');
+    Rotar_Derecha.onChange(function () {
         camera.rotate();
     });
 
