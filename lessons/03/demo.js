@@ -122,9 +122,10 @@ loader
     .then(function () {
 
 
-// merge files into clean series/stack/frame structure
         var series = mergeFilesIntoCleanSeriesStackFrameStructure();
-        var stack = series[0].stack[0];
+
+
+        var stack = createStackOfASeriesOfImages();
         loader.free();
         loader = null;
         // be carefull that series and target stack exist!
@@ -171,6 +172,10 @@ loader
         function mergeFilesIntoCleanSeriesStackFrameStructure() {
             var series = loader.data[0].mergeSeries(loader.data);
             return series;
+        }
+
+        function createStackOfASeriesOfImages() {
+            return series[0].stack[0];
         }
     })
     .catch(function (error) {
