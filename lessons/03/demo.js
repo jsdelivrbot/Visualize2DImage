@@ -129,9 +129,10 @@ loader
 
 
         detachLoaderAndProgressBarFromDOM();
-        loader = null;
-        // be carefull that series and target stack exist!
-        var stackHelper = new AMI.StackHelper(stack);
+
+
+// be carefull that series and target stack exist!
+        var stackHelper = createStackHelperToManipulateOrientationAndSliceDisplayed();
         // stackHelper.orientation = 2;
         // stackHelper.index = 56;
 
@@ -182,6 +183,10 @@ loader
 
         function detachLoaderAndProgressBarFromDOM() {
             loader.free();
+        }
+
+        function createStackHelperToManipulateOrientationAndSliceDisplayed() {
+            return new AMI.StackHelper(stack);
         }
     })
     .catch(function (error) {
