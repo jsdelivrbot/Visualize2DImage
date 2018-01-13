@@ -10,11 +10,9 @@ var scene = new THREE.Scene();
 
 var camera = setCamera();
 
+
 // Setup controls
-var controls = new AMI.TrackballOrthoControl(camera, container);
-controls.staticMoving = true;
-controls.noRotate = true;
-camera.controls = controls;
+var controls = setControls();
 
 /**
  * Handle window resize
@@ -197,4 +195,12 @@ function setCamera() {
         0.1,
         10000
     );
+}
+
+function setControls() {
+    var controls = new AMI.TrackballOrthoControl(camera, container);
+    controls.staticMoving = true;
+    controls.noRotate = true;
+    camera.controls = controls;
+    return controls;
 }
