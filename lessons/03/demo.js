@@ -42,7 +42,7 @@ function gui(stackHelper) {
     // only reason to use this object is to satusfy data.GUI
     var camUtils = {
         Invertir_Eje_X: false,
-        invertColumns: false,
+        Invertir_Eje_Y: false,
         rotate45: false,
         rotate: 0,
         orientation: 'default',
@@ -56,8 +56,8 @@ function gui(stackHelper) {
         camera.invertRows();
     });
 
-    var invertColumns = cameraFolder.add(camUtils, 'invertColumns');
-    invertColumns.onChange(function () {
+    var Invertir_Eje_Y = cameraFolder.add(camUtils, 'Invertir_Eje_Y');
+    Invertir_Eje_Y.onChange(function () {
         camera.invertColumns();
     });
 
