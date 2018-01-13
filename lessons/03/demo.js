@@ -29,11 +29,12 @@ window.addEventListener('resize', onWindowResize, attachEventListenerOnWndowLoad
  * Build GUI
  */
 function gui(stackHelper) {
+    const myGuiContainerId = 'my-gui-container';
     var gui = new dat.GUI({
         autoPlace: false
     });
 
-    var customContainer = document.getElementById('my-gui-container');
+    var customContainer = document.getElementById(myGuiContainerId);
     customContainer.appendChild(gui.domElement);
     // only reason to use this object is to satusfy data.GUI
     var camUtils = {
@@ -139,7 +140,7 @@ loader
         scene.add(stackHelper);
 
         // build the gui
-        gui(stackHelper);
+        gui(stackHelper, 'my-gui-container');
 
         // center camera and interactor to center of bouding box
         // for nicer experience
