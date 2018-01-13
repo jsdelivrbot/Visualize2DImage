@@ -120,8 +120,10 @@ var file = 'https://cdn.rawgit.com/FNNDSC/data/master/nifti/adi_brain/adi_brain.
 loader
     .load(file)
     .then(function () {
-        // merge files into clean series/stack/frame structure
-        var series = loader.data[0].mergeSeries(loader.data);
+
+
+// merge files into clean series/stack/frame structure
+        var series = mergeFilesIntoCleanSeriesStackFrameStructure();
         var stack = series[0].stack[0];
         loader.free();
         loader = null;
@@ -165,6 +167,11 @@ loader
         camera.canvas = canvas;
         camera.update();
         camera.fitBox(2);
+
+        function mergeFilesIntoCleanSeriesStackFrameStructure() {
+            var series = loader.data[0].mergeSeries(loader.data);
+            return series;
+        }
     })
     .catch(function (error) {
         window.console.log('oops... something went wrong...');
