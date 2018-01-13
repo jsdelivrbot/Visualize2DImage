@@ -13,6 +13,7 @@ var controls = setControls();
  */
 function onWindowResize() {
     const numberOfDirectionsToRecalculateZoom = 2;
+
     camera.canvas = {
         width: container.offsetWidth,
         height: container.offsetHeight,
@@ -21,7 +22,8 @@ function onWindowResize() {
     renderer.setSize(container.offsetWidth, container.offsetHeight);
 }
 
-window.addEventListener('resize', onWindowResize, false);
+const attachEventListenerOnWndowLoad = true;
+window.addEventListener('resize', onWindowResize, attachEventListenerOnWndowLoad);
 
 /**
  * Build GUI
