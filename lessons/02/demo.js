@@ -69,21 +69,53 @@ const type = 'resize';
 const useCaptureToExecuteEventResponseOnWindowLoad = false;
 window.addEventListener(type, onWindowResize, useCaptureToExecuteEventResponseOnWindowLoad);
 
-// Setup lights
-var particleLight = new THREE.Mesh(
-    new THREE.SphereBufferGeometry(4, 8, 8),
-    new THREE.MeshBasicMaterial({color: 0xffffff})
-);
-scene.add(particleLight);
+function setupParticleLight() {
+    const radius = 4;
+    const widthSegments = 8;
+    const heightSegments = 8;
+    const whiteColor = 0xffffff;
+    var particleLight = new THREE.Mesh(
+        new THREE.SphereBufferGeometry(radius, widthSegments, heightSegments),
+        new THREE.MeshBasicMaterial({color: whiteColor})
+    );
+    scene.add(particleLight);
+    return {whiteColor, particleLight};
+}
 
-scene.add(new THREE.AmbientLight(0x222222));
+const particleLightCreated = setupParticleLight();
+const whiteColor = particleLightCreated.whiteColor;
+var particleLight = particleLightCreated.particleLight;
 
-var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(1, 1, 1).normalize();
-scene.add(directionalLight);
+setupAmbientLight();
 
-var pointLight = new THREE.PointLight(0xffffff, 2, 800);
-particleLight.add(pointLight);
+function setupAmbientLight() {
+    const blackColor = 0x222222;
+    scene.add(new THREE.AmbientLight(blackColor));
+}
+
+
+setupDirectionalLight();
+
+function setupDirectionalLight() {
+    const data = 1;
+    var directionalLight = new THREE.DirectionalLight(whiteColor, data);
+    const xPosition = 1;
+    const yPosition = 1;
+    const zPosition = 1;
+    directionalLight.position.set(xPosition, yPosition, zPosition).normalize();
+    scene.add(directionalLight);
+}
+
+
+setupPointLight();
+
+function setupPointLight() {
+    const pointLightData = 2;
+    const sea3dDataObject = 800;
+    var pointLight = new THREE.PointLight(whiteColor, pointLightData, sea3dDataObject);
+    particleLight.add(pointLight);
+}
+
 
 // Load STL model
 var loaderSTL = new THREE.STLLoader();
