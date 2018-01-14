@@ -1,14 +1,22 @@
 /* globals AMI*/
 
-// Setup renderer
-var container = document.getElementById('container');
-var renderer = new THREE.WebGLRenderer({
-    antialias: true
-});
-renderer.setSize(container.offsetWidth, container.offsetHeight);
-renderer.setClearColor(0x353535, 1);
-renderer.setPixelRatio(window.devicePixelRatio);
-container.appendChild(renderer.domElement);
+var {container, renderer} = setupRenderer();
+
+function setupRenderer() {
+    var container = document.getElementById('container');
+    const smoothBorders = true;
+    var renderer = new THREE.WebGLRenderer({
+        antialias: smoothBorders
+    });
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    const grayBackgroundColor = 0x353535;
+    const alpha = 1;
+    renderer.setClearColor(grayBackgroundColor, alpha);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+    return {container, renderer};
+}
+
 
 // Setup scene
 var scene = new THREE.Scene();
@@ -31,12 +39,13 @@ function onWindowResize() {
 
     renderer.setSize(container.offsetWidth, container.offsetHeight);
 }
+
 window.addEventListener('resize', onWindowResize, false);
 
 // Setup lights
 var particleLight = new THREE.Mesh(
     new THREE.SphereBufferGeometry(4, 8, 8),
-    new THREE.MeshBasicMaterial({ color: 0xffffff })
+    new THREE.MeshBasicMaterial({color: 0xffffff})
 );
 scene.add(particleLight);
 
@@ -51,8 +60,8 @@ particleLight.add(pointLight);
 
 // Load STL model
 var loaderSTL = new THREE.STLLoader();
-loaderSTL.load('https://cdn.rawgit.com/FNNDSC/data/master/stl/adi_brain/WM.stl', function(geometry) {
-    var material = new THREE.MeshPhongMaterial({ color: 0xf44336, specular: 0x111111, shininess: 200 });
+loaderSTL.load('https://cdn.rawgit.com/FNNDSC/data/master/stl/adi_brain/WM.stl', function (geometry) {
+    var material = new THREE.MeshPhongMaterial({color: 0xf44336, specular: 0x111111, shininess: 200});
     var mesh = new THREE.Mesh(geometry, material);
     // to LPS space
     var RASToLPS = new THREE.Matrix4();
@@ -242,13 +251,13 @@ var t1 = [
     '36749964'
 ];
 
-var files = t1.map(function(v) {
+var files = t1.map(function (v) {
     return 'https://cdn.rawgit.com/FNNDSC/data/master/dicom/adi_brain/' + v;
 });
 
 loader
     .load(files)
-    .then(function() {
+    .then(function () {
         // merge files into clean series/stack/frame structure
         var series = loader.data[0].mergeSeries(loader.data);
         loader.free();
@@ -267,7 +276,7 @@ loader
         camera.updateProjectionMatrix();
         controls.target.set(centerLPS.x, centerLPS.y, centerLPS.z);
     })
-    .catch(function(error) {
+    .catch(function (error) {
         window.console.log('oops... something went wrong...');
         window.console.log(error);
     });
@@ -286,8 +295,9 @@ function animate() {
     renderer.render(scene, camera);
 
     // request new frame
-    requestAnimationFrame(function() {
+    requestAnimationFrame(function () {
         animate();
     });
 }
+
 animate();
