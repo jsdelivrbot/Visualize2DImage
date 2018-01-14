@@ -88,19 +88,47 @@ function gui(stackHelper) {
 
     stackFolder.open();
 
-    // slice
-    var sliceFolder = gui.addFolder('Slice');
-    sliceFolder
-        .add(stackHelper.slice, 'windowWidth', 1, stack.minMax[1] - stack.minMax[0])
-        .step(1)
-        .listen();
-    sliceFolder
-        .add(stackHelper.slice, 'windowCenter', stack.minMax[0], stack.minMax[1])
-        .step(1)
-        .listen();
-    sliceFolder.add(stackHelper.slice, 'intensityAuto').listen();
-    sliceFolder.add(stackHelper.slice, 'invert');
-    sliceFolder.open();
+
+    createSlicePanel();
+
+    function createSlicePanel() {
+        var sliceFolder = gui.addFolder('Slice');
+
+        createWindowWidthSlider();
+
+        function createWindowWidthSlider() {
+            const vindowWidthGuiLabel = 'windowWidth';
+            const minWindowWidth = 1;
+            const maxWindowWidth = stack.minMax[1] - stack.minMax[0];
+            sliceFolder
+                .add(stackHelper.slice, vindowWidthGuiLabel, minWindowWidth, maxWindowWidth)
+                .step(1)
+                .listen();
+        }
+
+
+        createWindowCenterSlider();
+
+        function createWindowCenterSlider() {
+            const windowCenterGuiLabel = 'windowCenter';
+            const windowCenterMinValue = stack.minMax[0];
+            const windowCenterMaxValue = stack.minMax[1];
+
+            sliceFolder
+                .add(stackHelper.slice, windowCenterGuiLabel, windowCenterMinValue, windowCenterMaxValue)
+                .step(1)
+                .listen();
+        }
+
+        addColorImageEventListeners();
+
+        function addColorImageEventListeners() {
+            sliceFolder.add(stackHelper.slice, 'intensityAuto').listen();
+            sliceFolder.add(stackHelper.slice, 'invert');
+        }
+
+        sliceFolder.open();
+    }
 
     // bbox
     var bboxFolder = gui.addFolder('Bounding Box');
