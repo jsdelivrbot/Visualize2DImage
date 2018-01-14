@@ -5,17 +5,18 @@ var scene = setupScene();
 
 var camera = setupCamera();
 
-// Setup controls
-var controls = new AMI.TrackballControl(camera, container);
 
-/**
- * Handle window resize
- */
+var controls = setupControlls();
+
+
 function onWindowResize() {
     camera.aspect = container.offsetWidth / container.offsetHeight;
-    camera.updateProjectionMatrix();
-
+    updateProjectionMatrixToDetermineHowToDisplay3DDataas2DImage();
     renderer.setSize(container.offsetWidth, container.offsetHeight);
+    
+    function updateProjectionMatrixToDetermineHowToDisplay3DDataas2DImage() {
+        camera.updateProjectionMatrix();
+    }
 }
 
 window.addEventListener('resize', onWindowResize, false);
@@ -180,4 +181,8 @@ function setupCamera() {
     camera.position.z = 100;
 
     return camera;
+}
+
+function setupControlls() {
+    return new AMI.TrackballControl(camera, container);
 }
