@@ -153,11 +153,34 @@ function gui(stackHelper) {
         bboxFolder.open();
     }
 
-    // border
-    var borderFolder = gui.addFolder('Border');
-    borderFolder.add(stackHelper.border, 'visible');
-    borderFolder.addColor(stackHelper.border, 'color');
-    borderFolder.open();
+    createBorder();
+
+    function createBorder() {
+        var borderFolder = createBorderPanel();
+
+        function createBorderPanel() {
+            const borderGuiLabel = 'Border';
+            var borderFolder = gui.addFolder(borderGuiLabel);
+            return borderFolder;
+        }
+
+        createVisibleBorderCheckBox();
+
+        function createVisibleBorderCheckBox() {
+            const visibleGuiLabel = 'visible';
+            borderFolder.add(stackHelper.border, visibleGuiLabel);
+        }
+
+        createBorderColorPicker();
+
+        function createBorderColorPicker() {
+            const colorGuiLabel = 'color';
+            borderFolder.addColor(stackHelper.border, colorGuiLabel);
+        }
+
+        borderFolder.open();
+    }
+
 }
 
 /**
