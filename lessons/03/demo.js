@@ -196,11 +196,17 @@ loader
 
 function setRenderer() {
     var container = document.getElementById('container');
+    const smoothBorders = true;
+
     var renderer = new THREE.WebGLRenderer({
-        antialias: true
+        antialias: smoothBorders
     });
     renderer.setSize(container.offsetWidth, container.offsetHeight);
-    renderer.setClearColor(0x353535, 1);
+
+    const blackColor = 0x353535;
+    const alpha = 1;
+
+    renderer.setClearColor(blackColor, alpha);
     renderer.setPixelRatio(window.devicePixelRatio);
     container.appendChild(renderer.domElement);
     return {container: container, renderer: renderer};
