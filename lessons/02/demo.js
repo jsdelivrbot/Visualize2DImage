@@ -52,8 +52,13 @@ function setupCamera() {
     return camera;
 }
 
-// Setup controls
-var controls = new AMI.TrackballControl(camera, container);
+var controls = setupControls();
+
+function setupControls() {
+    var controls = new AMI.TrackballControl(camera, container);
+    return controls;
+}
+
 
 /**
  * Handle window resize
