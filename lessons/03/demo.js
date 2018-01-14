@@ -8,9 +8,7 @@ var scene = new THREE.Scene();
 var camera = setCamera();
 var controls = setControls();
 
-/**
- * Handle window resize
- */
+
 function onWindowResize() {
     const numberOfDirectionsToRecalculateZoom = 2;
 
@@ -22,12 +20,9 @@ function onWindowResize() {
     renderer.setSize(container.offsetWidth, container.offsetHeight);
 }
 
-const attachEventListenerOnWndowLoad = true;
-window.addEventListener('resize', onWindowResize, attachEventListenerOnWndowLoad);
+const attachEventListenerOnWindowLoad = true;
+window.addEventListener('resize', onWindowResize, attachEventListenerOnWindowLoad);
 
-/**
- * Build GUI
- */
 function gui(stackHelper) {
     const myGuiContainerId = 'my-gui-container';
     var gui = new dat.GUI({
@@ -36,7 +31,7 @@ function gui(stackHelper) {
 
     var customContainer = document.getElementById(myGuiContainerId);
     customContainer.appendChild(gui.domElement);
-    // only reason to use this object is to satusfy data.GUI
+
     var camUtils = {
         Invertir_Eje_X: false,
         Invertir_Eje_Y: false,
@@ -46,7 +41,6 @@ function gui(stackHelper) {
         convention: 'radio',
     };
 
-    // camera
     var cameraFolder = gui.addFolder('Camera');
     var Invertir_Eje_X = cameraFolder.add(camUtils, 'Invertir_Eje_X');
     Invertir_Eje_X.onChange(function () {
@@ -68,11 +62,15 @@ function gui(stackHelper) {
         .step(1)
         .listen();
 
-    let orientationUpdate = cameraFolder.add(camUtils, 'Orientacion', ['axial', 'coronal', 'sagittal']);
+    const Orientacion = 'Orientacion';
+    const medicalImageAxisNames = ['axial', 'coronal', 'sagittal'];
+    
+    let orientationUpdate = cameraFolder.add(camUtils, Orientacion, medicalImageAxisNames);
     orientationUpdate.onChange(function (value) {
         camera.orientation = value;
         camera.update();
-        camera.fitBox(2);
+        const numberOfDirectionsToRecalculateCameraDimension = 2;
+        camera.fitBox(numberOfDirectionsToRecalculateCameraDimension);
         stackHelper.orientation = camera.stackOrientation;
     });
 
@@ -220,7 +218,7 @@ function setCamera() {
     const bottom = container.clientHeight / -2;
     const near = 0.1;
     const far = 10000;
-    
+
     return new AMI.OrthographicCamera(
         left,
         right,
