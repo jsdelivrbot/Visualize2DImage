@@ -90,7 +90,7 @@ function gui(stackHelper) {
 
     const guiIndexLabel = 'index';
     const firstSeriesImage = 0;
-    const lastSeriesImage = stackHelper.stack.dimensionsIJK.z - 1;
+    const lastSeriesImage = stackHelper.stack.dimensionsIJK.y - 1;
     stackFolder
         .add(stackHelper, guiIndexLabel, firstSeriesImage, lastSeriesImage)
         .step(1)
