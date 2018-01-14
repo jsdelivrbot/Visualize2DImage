@@ -140,23 +140,23 @@ loader
         const adjustBorderBoxStackHelperDimensionsToFitInWindow = new THREE.Vector3(worldbb[1] - worldbb[0], worldbb[3] - worldbb[2], worldbb[5] - worldbb[4]);
         var lpsDims = adjustBorderBoxStackHelperDimensionsToFitInWindow;
 
-        // box: {halfDimensions, center}
         var box = {
             center: stack.worldCenter().clone(),
             halfDimensions: new THREE.Vector3(lpsDims.x + 10, lpsDims.y + 10, lpsDims.z + 10)
         };
 
-        // init and zoom
-        var canvas = {
+        var initCanvasAndZoom = {
             width: container.clientWidth,
             height: container.clientHeight,
         };
 
-        camera.directions = [stack.xCosine, stack.yCosine, stack.zCosine];
+        const ratioBetweenTheAdjacentCatechusAndHypotenuse = [stack.xCosine, stack.yCosine, stack.zCosine];
+        camera.directions = ratioBetweenTheAdjacentCatechusAndHypotenuse;
         camera.box = box;
-        camera.canvas = canvas;
+        camera.canvas = initCanvasAndZoom;
         camera.update();
-        camera.fitBox(2);
+        const numberOfDirectionsToRecalculateZoom = 2;
+        camera.fitBox(numberOfDirectionsToRecalculateZoom);
 
         function mergeFilesIntoCleanSeriesStackFrameStructure() {
             const target = 0;
