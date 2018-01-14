@@ -183,9 +183,6 @@ function gui(stackHelper) {
 
 }
 
-/**
- * Start animation loop
- */
 function animate() {
     controls.update();
     renderer.render(scene, camera);
@@ -198,10 +195,15 @@ function animate() {
 
 animate();
 
-// Setup loader
-var loader = new AMI.VolumeLoader(container);
+var loader = createLoader();
 
-var t2 = [
+function createLoader() {
+    var loader = new AMI.VolumeLoader(container);
+    return loader;
+}
+
+
+var urlEndings = [
     '36444280',
     '36444294',
     '36444308',
@@ -222,26 +224,45 @@ var t2 = [
     '36444532',
     '36746856'
 ];
-var files = t2.map(function (v) {
-    return 'https://cdn.rawgit.com/FNNDSC/data/master/dicom/adi_brain/' + v;
+var files = urlEndings.map(function (currentUrlEnding) {
+    const fileUrl = 'https://cdn.rawgit.com/FNNDSC/data/master/dicom/adi_brain/';
+    return fileUrl + currentUrlEnding;
 });
 
 loader
     .load(files)
     .then(function () {
-        // merge files into clean series/stack/frame structure
-        var series = loader.data[0].mergeSeries(loader.data);
-        var stack = series[0].stack[0];
+        var series = mergeFilesIntoACleanSeriesStackFrameStructure();
+
+        function mergeFilesIntoACleanSeriesStackFrameStructure() {
+            var series = loader.data[0].mergeSeries(loader.data);
+            return series;
+        }
+
+        var stack = getCurrentStack();
+
+        function getCurrentStack() {
+            var stack = series[0].stack[0];
+            return stack;
+        }
+
         loader.free();
         loader = null;
-        // be carefull that series and target stack exist!
-        var stackHelper = new AMI.StackHelper(stack);
-        stackHelper.bbox.color = 0x8bc34a;
-        stackHelper.border.color = 0xf44336;
 
-        scene.add(stackHelper);
+        var stackHelper = createStackHelperToOperateEasilyWithCurrentImage();
 
-        // build the gui
+
+        function createStackHelperToOperateEasilyWithCurrentImage() {
+            var stackHelper = new AMI.StackHelper(stack);
+            const greenColor = 0x8bc34a;
+            const redColor = 0xf44336;
+            stackHelper.bbox.color = greenColor;
+            stackHelper.border.color = redColor;
+
+            scene.add(stackHelper);
+            return stackHelper;
+        }
+
         gui(stackHelper);
 
         // center camera and interactor to center of bouding box
