@@ -130,11 +130,28 @@ function gui(stackHelper) {
         sliceFolder.open();
     }
 
-    // bbox
-    var bboxFolder = gui.addFolder('Bounding Box');
-    bboxFolder.add(stackHelper.bbox, 'visible');
-    bboxFolder.addColor(stackHelper.bbox, 'color');
-    bboxFolder.open();
+    createBorderBoxPanel();
+
+    function createBorderBoxPanel() {
+        const boundingBoxGuiLabel = 'Bounding Box';
+        var bboxFolder = gui.addFolder(boundingBoxGuiLabel);
+
+        createVisibleCheckBox();
+
+        function createVisibleCheckBox() {
+            const visibleGuiLabel = 'visible';
+            bboxFolder.add(stackHelper.bbox, visibleGuiLabel);
+        }
+
+        createBorderBoxColorPicker();
+
+        function createBorderBoxColorPicker() {
+            const colorGuiLabel = 'color';
+            bboxFolder.addColor(stackHelper.bbox, colorGuiLabel);
+        }
+
+        bboxFolder.open();
+    }
 
     // border
     var borderFolder = gui.addFolder('Border');
