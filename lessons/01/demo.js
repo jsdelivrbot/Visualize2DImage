@@ -1,13 +1,48 @@
 var {container, renderer} = setupRenderer();
 
+function setupRenderer() {
+    var container = document.getElementById('container');
+    const smootBorders = true;
+    var renderer = new THREE.WebGLRenderer({
+        antialias: smootBorders
+    });
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    const greyBackgroundColor = 0x353535;
+    const alpha = 1;
+    renderer.setClearColor(greyBackgroundColor, alpha);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+    return {container, renderer};
+}
+
 var scene = setupScene();
 
+function setupScene() {
+    return new THREE.Scene();
+}
 
 var camera = setupCamera();
 
+function setupCamera() {
+    const fov = 45;
+    const aspect = container.offsetWidth / container.offsetHeight;
+    const near = 0.01;
+    const far = 10000000;
+
+    var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+
+    camera.position.x = 150;
+    camera.position.y = 150;
+    camera.position.z = 100;
+
+    return camera;
+}
 
 var controls = setupControlls();
 
+function setupControlls() {
+    return new AMI.TrackballControl(camera, container);
+}
 
 function onWindowResize() {
     camera.aspect = container.offsetWidth / container.offsetHeight;
@@ -265,51 +300,25 @@ loader
 
         gui(stackHelper);
 
-        // center camera and interactor to center of bouding box
-        var centerLPS = stackHelper.stack.worldCenter();
-        camera.lookAt(centerLPS.x, centerLPS.y, centerLPS.z);
-        camera.updateProjectionMatrix();
-        controls.target.set(centerLPS.x, centerLPS.y, centerLPS.z);
+        var centerLPS = centerCamera();
+
+        function centerCamera() {
+            var centerLPS = stackHelper.stack.worldCenter();
+            camera.lookAt(centerLPS.x, centerLPS.y, centerLPS.z);
+            camera.updateProjectionMatrix();
+            return centerLPS;
+        }
+
+        centerImage();
+
+        function centerImage() {
+            controls.target.set(centerLPS.x, centerLPS.y, centerLPS.z);
+        }
+
     })
     .catch(function (error) {
         window.console.log('oops... something went wrong...');
         window.console.log(error);
     });
 
-function setupRenderer() {
-    var container = document.getElementById('container');
-    const smootBorders = true;
-    var renderer = new THREE.WebGLRenderer({
-        antialias: smootBorders
-    });
-    renderer.setSize(container.offsetWidth, container.offsetHeight);
-    const greyBackgroundColor = 0x353535;
-    const alpha = 1;
-    renderer.setClearColor(greyBackgroundColor, alpha);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    container.appendChild(renderer.domElement);
-    return {container, renderer};
-}
 
-function setupScene() {
-    return new THREE.Scene();
-}
-
-function setupCamera() {
-    const fov = 45;
-    const aspect = container.offsetWidth / container.offsetHeight;
-    const near = 0.01;
-    const far = 10000000;
-
-    var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-
-    camera.position.x = 150;
-    camera.position.y = 150;
-    camera.position.z = 100;
-
-    return camera;
-}
-
-function setupControlls() {
-    return new AMI.TrackballControl(camera, container);
-}
