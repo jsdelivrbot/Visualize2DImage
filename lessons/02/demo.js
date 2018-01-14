@@ -26,11 +26,31 @@ function setupScene() {
 }
 
 
-// Setup camera
-var camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 0.01, 10000000);
-camera.position.x = 150;
-camera.position.y = 150;
-camera.position.z = 100;
+var camera = setupCamera();
+
+function setupCamera() {
+    var camera = createCamera();
+
+    function createCamera() {
+        const fov = 45;
+        const aspectRatio = container.offsetWidth / container.offsetHeight;
+        const near = 0.01;
+        const far = 10000000;
+
+        var camera = new THREE.PerspectiveCamera(fov, aspectRatio, near, far);
+        return camera;
+    }
+
+    setCameraPosition();
+
+    function setCameraPosition() {
+        camera.position.x = 150;
+        camera.position.y = 150;
+        camera.position.z = 100;
+    }
+
+    return camera;
+}
 
 // Setup controls
 var controls = new AMI.TrackballControl(camera, container);
