@@ -86,27 +86,31 @@ function gui(stackHelper) {
 
     cameraFolder.open();
 
-    // of course we can do everything from lesson 01!
     var stackFolder = gui.addFolder('Stack');
+
+    const guiIndexLabel = 'index';
+    const firstSeriesImage = 0;
+    const lastSeriesImage = stackHelper.stack.dimensionsIJK.z - 1;
     stackFolder
-        .add(stackHelper, 'index', 0, stackHelper.stack.dimensionsIJK.z - 1)
+        .add(stackHelper, guiIndexLabel, firstSeriesImage, lastSeriesImage)
         .step(1)
         .listen();
+
+    const modeToApplySlicing = 'interpolation';
+    const minValue = 0;
+    const maxValue = 1;
     stackFolder
-        .add(stackHelper.slice, 'interpolation', 0, 1)
+        .add(stackHelper.slice, modeToApplySlicing, minValue, maxValue)
         .step(1)
         .listen();
     stackFolder.open();
 }
 
-/**
- * Start animation loop
- */
+
 function animate() {
     controls.update();
     renderer.render(scene, camera);
 
-    // request new frame
     requestAnimationFrame(function () {
         animate();
     });
@@ -114,7 +118,6 @@ function animate() {
 
 animate();
 
-// Setup loader
 var loader = new AMI.VolumeLoader(container);
 var file = 'https://cdn.rawgit.com/FNNDSC/data/master/nifti/adi_brain/adi_brain.nii.gz';
 
@@ -122,36 +125,17 @@ loader
     .load(file)
     .then(function () {
 
-
         var series = mergeFilesIntoCleanSeriesStackFrameStructure();
-
-
         var stack = createStackOfASeriesOfImages();
-
-
         detachLoaderAndProgressBarFromDOM();
-
-
-// be carefull that series and target stack exist!
         var stackHelper = createStackHelperToManipulateOrientationAndSliceDisplayed();
-        // stackHelper.orientation = 2;
-        // stackHelper.index = 56;
 
-        // tune bounding box
         stackHelper.bbox.visible = false;
-
-        // tune slice border
-        stackHelper.border.color = 0xff9800;
-        // stackHelper.border.visible = false;
-
+        const orangeColor = 0xff9800;
+        stackHelper.border.color = orangeColor;
         scene.add(stackHelper);
+        gui(stackHelper, 'my-gui-container');o
 
-        // build the gui
-        gui(stackHelper, 'my-gui-container');
-
-        // center camera and interactor to center of bouding box
-        // for nicer experience
-        // set camera
         var worldbb = stack.worldBoundingBox();
         var lpsDims = new THREE.Vector3(worldbb[1] - worldbb[0], worldbb[3] - worldbb[2], worldbb[5] - worldbb[4]);
 
@@ -174,7 +158,8 @@ loader
         camera.fitBox(2);
 
         function mergeFilesIntoCleanSeriesStackFrameStructure() {
-            var series = loader.data[0].mergeSeries(loader.data);
+            const target = 0;
+            var series = loader.data[target].mergeSeries(loader.data);
             return series;
         }
 
