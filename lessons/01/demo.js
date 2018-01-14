@@ -13,7 +13,7 @@ function onWindowResize() {
     camera.aspect = container.offsetWidth / container.offsetHeight;
     updateProjectionMatrixToDetermineHowToDisplay3DDataas2DImage();
     renderer.setSize(container.offsetWidth, container.offsetHeight);
-    
+
     function updateProjectionMatrixToDetermineHowToDisplay3DDataas2DImage() {
         camera.updateProjectionMatrix();
     }
@@ -21,33 +21,71 @@ function onWindowResize() {
 
 window.addEventListener('resize', onWindowResize, false);
 
-/**
- * Build GUI
- */
-function gui(stackHelper) {
-    var stack = stackHelper.stack;
-    var gui = new dat.GUI({
-        autoPlace: false,
-    });
-    var customContainer = document.getElementById('my-gui-container');
-    customContainer.appendChild(gui.domElement);
 
-    // stack
-    var stackFolder = gui.addFolder('Stack');
-    // index range depends on stackHelper orientation.
-    var index = stackFolder
-        .add(stackHelper, 'index', 0, stack.dimensionsIJK.z - 1)
-        .step(1)
-        .listen();
-    var orientation = stackFolder
-        .add(stackHelper, 'orientation', 0, 2)
-        .step(1)
-        .listen();
-    orientation.onChange(function (value) {
-        index.__max = stackHelper.orientationMaxIndex;
-        // center index
-        stackHelper.index = Math.floor(index.__max / 2);
-    });
+function gui(stackHelper) {
+
+    var {stack, gui} = createGui();
+
+    function createGui() {
+        var stack = stackHelper.stack;
+        var gui = new dat.GUI({
+            autoPlace: false,
+        });
+        const guiElementId = 'my-gui-container';
+        var customContainer = document.getElementById(guiElementId);
+        customContainer.appendChild(gui.domElement);
+        return {stack, gui};
+    }
+
+    var {stackFolder, index, orientation} = createStackPanel();
+
+    function createStackPanel() {
+        const stackGuiLabel = 'Stack';
+        var stackFolder = gui.addFolder(stackGuiLabel);
+
+        const indexGuiLabel = 'index';
+        var index = createIndexSlider();
+
+        function createIndexSlider() {
+            const min = 0;
+            const max = stack.dimensionsIJK.z - 1;
+
+            var index = stackFolder
+                .add(stackHelper, indexGuiLabel, min, max)
+                .step(1)
+                .listen();
+
+            return index;
+        }
+
+        var orientation = createOrientationSlider();
+
+        function createOrientationSlider() {
+            const orientationGuiLabel = 'orientation';
+            const orientationMin = 0;
+            const orientationMax = 2;
+
+            var orientation = stackFolder
+                .add(stackHelper, orientationGuiLabel, orientationMin, orientationMax)
+                .step(1)
+                .listen();
+
+            return orientation;
+        }
+
+        return {stackFolder, index, orientation};
+    }
+
+    addOrientationEventListener();
+
+    function addOrientationEventListener() {
+        orientation.onChange(function () {
+            index.__max = stackHelper.orientationMaxIndex;
+            const centerIndexSliderOnGuiFormula = Math.floor(index.__max / 2);
+            stackHelper.index = centerIndexSliderOnGuiFormula;
+        });
+    }
+
     stackFolder.open();
 
     // slice
