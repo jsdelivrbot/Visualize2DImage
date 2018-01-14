@@ -59,18 +59,15 @@ function setupControls() {
     return controls;
 }
 
-
-/**
- * Handle window resize
- */
 function onWindowResize() {
     camera.aspect = container.offsetWidth / container.offsetHeight;
     camera.updateProjectionMatrix();
-
     renderer.setSize(container.offsetWidth, container.offsetHeight);
 }
 
-window.addEventListener('resize', onWindowResize, false);
+const type = 'resize';
+const useCaptureToExecuteEventResponseOnWindowLoad = false;
+window.addEventListener(type, onWindowResize, useCaptureToExecuteEventResponseOnWindowLoad);
 
 // Setup lights
 var particleLight = new THREE.Mesh(
