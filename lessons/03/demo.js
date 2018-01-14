@@ -37,8 +37,8 @@ function gui(stackHelper) {
         Invertir_Eje_Y: false,
         Rotar_Derecha: false,
         rotate: 0,
-        Orientacion: 'default',
-        convention: 'radio',
+        Orientacion: 'axial',
+        Convencion: 'radio',
     };
 
     var cameraFolder = gui.addFolder('Camera');
@@ -64,7 +64,7 @@ function gui(stackHelper) {
 
     const Orientacion = 'Orientacion';
     const medicalImageAxisNames = ['axial', 'coronal', 'sagittal'];
-    
+
     let orientationUpdate = cameraFolder.add(camUtils, Orientacion, medicalImageAxisNames);
     orientationUpdate.onChange(function (value) {
         camera.orientation = value;
@@ -74,7 +74,10 @@ function gui(stackHelper) {
         stackHelper.orientation = camera.stackOrientation;
     });
 
-    let conventionUpdate = cameraFolder.add(camUtils, 'convention', ['radio', 'neuro']);
+    const medicalConvention = 'Convencion';
+    const modesToVisualizeImage = ['radio', 'neuro'];
+
+    let conventionUpdate = cameraFolder.add(camUtils, medicalConvention, modesToVisualizeImage);
     conventionUpdate.onChange(function (value) {
         camera.convention = value;
         camera.update();
