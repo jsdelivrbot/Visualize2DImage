@@ -213,13 +213,21 @@ function setRenderer() {
 }
 
 function setCamera() {
+
+    const left = container.clientWidth / -2;
+    const right = container.clientWidth / 2;
+    const top = container.clientHeight / 2;
+    const bottom = container.clientHeight / -2;
+    const near = 0.1;
+    const far = 10000;
+    
     return new AMI.OrthographicCamera(
-        container.clientWidth / -2,
-        container.clientWidth / 2,
-        container.clientHeight / 2,
-        container.clientHeight / -2,
-        0.1,
-        10000
+        left,
+        right,
+        top,
+        bottom,
+        near,
+        far
     );
 }
 
