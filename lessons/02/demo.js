@@ -18,8 +18,13 @@ function setupRenderer() {
 }
 
 
-// Setup scene
-var scene = new THREE.Scene();
+var scene = setupScene();
+
+function setupScene() {
+    var scene = new THREE.Scene();
+    return scene;
+}
+
 
 // Setup camera
 var camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 0.01, 10000000);
