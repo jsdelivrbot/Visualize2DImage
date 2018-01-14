@@ -378,20 +378,21 @@ function load2DBrainImage() {
 }
 
 
-/**
- * Start animation loop
- */
 function animate() {
-    var timer = Date.now() * 0.00025;
+    animateParticleLight();
 
-    particleLight.position.x = Math.sin(timer * 7) * 100;
-    particleLight.position.y = Math.cos(timer * 5) * 120;
-    particleLight.position.z = Math.cos(timer * 3) * 140;
+    function animateParticleLight() {
+        var timer = Date.now() * 0.00025;
+
+        particleLight.position.x = Math.sin(timer * 7) * 100;
+        particleLight.position.y = Math.cos(timer * 5) * 120;
+        particleLight.position.z = Math.cos(timer * 3) * 140;
+    }
+
 
     controls.update();
     renderer.render(scene, camera);
 
-    // request new frame
     requestAnimationFrame(function () {
         animate();
     });
