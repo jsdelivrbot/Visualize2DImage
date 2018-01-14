@@ -134,10 +134,11 @@ loader
         const orangeColor = 0xff9800;
         stackHelper.border.color = orangeColor;
         scene.add(stackHelper);
-        gui(stackHelper, 'my-gui-container');o
+        gui(stackHelper, 'my-gui-container');
 
         var worldbb = stack.worldBoundingBox();
-        var lpsDims = new THREE.Vector3(worldbb[1] - worldbb[0], worldbb[3] - worldbb[2], worldbb[5] - worldbb[4]);
+        const adjustBorderBoxStackHelperDimensionsToFitInWindow = new THREE.Vector3(worldbb[1] - worldbb[0], worldbb[3] - worldbb[2], worldbb[5] - worldbb[4]);
+        var lpsDims = adjustBorderBoxStackHelperDimensionsToFitInWindow;
 
         // box: {halfDimensions, center}
         var box = {
