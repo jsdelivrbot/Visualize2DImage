@@ -1,17 +1,9 @@
-/* globals dat, AMI*/
-
-
-// Setup renderer
 var {container, renderer} = setupRenderer();
 
-// Setup scene
-var scene = new THREE.Scene();
+var scene = setupScene();
 
-// Setup camera
-var camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 0.01, 10000000);
-camera.position.x = 150;
-camera.position.y = 150;
-camera.position.z = 100;
+
+var camera = setupCamera();
 
 // Setup controls
 var controls = new AMI.TrackballControl(camera, container);
@@ -169,4 +161,23 @@ function setupRenderer() {
     renderer.setPixelRatio(window.devicePixelRatio);
     container.appendChild(renderer.domElement);
     return {container, renderer};
+}
+
+function setupScene() {
+    return new THREE.Scene();
+}
+
+function setupCamera() {
+    const fov = 45;
+    const aspect = container.offsetWidth / container.offsetHeight;
+    const near = 0.01;
+    const far = 10000000;
+
+    var camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+
+    camera.position.x = 150;
+    camera.position.y = 150;
+    camera.position.z = 100;
+
+    return camera;
 }
