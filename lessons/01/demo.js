@@ -1,14 +1,8 @@
 /* globals dat, AMI*/
 
+
 // Setup renderer
-var container = document.getElementById('container');
-var renderer = new THREE.WebGLRenderer({
-    antialias: true
-});
-renderer.setSize(container.offsetWidth, container.offsetHeight);
-renderer.setClearColor(0x353535, 1);
-renderer.setPixelRatio(window.devicePixelRatio);
-container.appendChild(renderer.domElement);
+var {container, renderer} = setupRenderer();
 
 // Setup scene
 var scene = new THREE.Scene();
@@ -56,7 +50,7 @@ function gui(stackHelper) {
         .add(stackHelper, 'orientation', 0, 2)
         .step(1)
         .listen();
-    orientation.onChange(function(value) {
+    orientation.onChange(function (value) {
         index.__max = stackHelper.orientationMaxIndex;
         // center index
         stackHelper.index = Math.floor(index.__max / 2);
@@ -98,10 +92,11 @@ function animate() {
     renderer.render(scene, camera);
 
     // request new frame
-    requestAnimationFrame(function() {
+    requestAnimationFrame(function () {
         animate();
     });
 }
+
 animate();
 
 // Setup loader
@@ -128,13 +123,13 @@ var t2 = [
     '36444532',
     '36746856'
 ];
-var files = t2.map(function(v) {
+var files = t2.map(function (v) {
     return 'https://cdn.rawgit.com/FNNDSC/data/master/dicom/adi_brain/' + v;
 });
 
 loader
     .load(files)
-    .then(function() {
+    .then(function () {
         // merge files into clean series/stack/frame structure
         var series = loader.data[0].mergeSeries(loader.data);
         var stack = series[0].stack[0];
@@ -156,7 +151,22 @@ loader
         camera.updateProjectionMatrix();
         controls.target.set(centerLPS.x, centerLPS.y, centerLPS.z);
     })
-    .catch(function(error) {
+    .catch(function (error) {
         window.console.log('oops... something went wrong...');
         window.console.log(error);
     });
+
+function setupRenderer() {
+    var container = document.getElementById('container');
+    const smootBorders = true;
+    var renderer = new THREE.WebGLRenderer({
+        antialias: smootBorders
+    });
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    const greyBackgroundColor = 0x353535;
+    const alpha = 1;
+    renderer.setClearColor(greyBackgroundColor, alpha);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+    return {container, renderer};
+}
