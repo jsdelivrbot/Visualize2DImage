@@ -116,18 +116,36 @@ function setupPointLight() {
     particleLight.add(pointLight);
 }
 
+loadDataIntoMesh();
 
-// Load STL model
-var loaderSTL = new THREE.STLLoader();
-loaderSTL.load('https://cdn.rawgit.com/FNNDSC/data/master/stl/adi_brain/WM.stl', function (geometry) {
-    var material = new THREE.MeshPhongMaterial({color: 0xf44336, specular: 0x111111, shininess: 200});
-    var mesh = new THREE.Mesh(geometry, material);
-    // to LPS space
-    var RASToLPS = new THREE.Matrix4();
-    RASToLPS.set(-1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-    mesh.applyMatrix(RASToLPS);
-    scene.add(mesh);
-});
+function loadDataIntoMesh() {
+    var loaderSTL = new THREE.STLLoader();
+    const brainMeshURL = 'https://cdn.rawgit.com/FNNDSC/data/master/stl/adi_brain/WM.stl';
+    loaderSTL.load(brainMeshURL, function (geometry) {
+        var mesh = createMesh();
+
+        function createMesh() {
+            const red = 0xf44336;
+            const black = 0x111111;
+            const shininessValue = 200;
+            var material = new THREE.MeshPhongMaterial({color: red, specular: black, shininess: shininessValue});
+            var mesh = new THREE.Mesh(geometry, material);
+            return mesh;
+        }
+
+
+        setMeshPositionToFit2DImagePlace();
+
+        function setMeshPositionToFit2DImagePlace() {
+            var RASToLPS = new THREE.Matrix4();
+            RASToLPS.set(-1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+            mesh.applyMatrix(RASToLPS);
+        }
+
+        scene.add(mesh);
+    });
+}
+
 
 // Setup loader
 var loader = new AMI.VolumeLoader(container);
