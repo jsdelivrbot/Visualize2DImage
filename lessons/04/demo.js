@@ -369,23 +369,28 @@ function buildGUI(stackHelper) {
 
     layerMixFolder.open();
 
-    // hook up callbacks
-    controls.addEventListener('OnScroll', function (e) {
-        if (e.delta > 0) {
-            if (stackHelper.index >= stack.dimensionsIJK.z - 1) {
-                return false;
-            }
-            stackHelper.index += 1;
-        } else {
-            if (stackHelper.index <= 0) {
-                return false;
-            }
-            stackHelper.index -= 1;
-        }
+    addScrollControlToChangeCurrentSliceUsingIndex();
 
-        updateLayer1();
-        updateLayerMix();
-    });
+    function addScrollControlToChangeCurrentSliceUsingIndex() {
+        controls.addEventListener('OnScroll', function (e) {
+
+
+            if (isScrollPositive()) {
+                if (isOutOfPositiveBound()) {
+                    return false;
+                }
+                stackHelper.index += 1;
+            } else {
+                if (isOutOfNegativeBounds()) {
+                    return false;
+                }
+                stackHelper.index -= 1;
+            }
+
+            updateLayer1();
+            updateLayerMix();
+        });
+    }
 
     updateLayer1();
     updateLayerMix();
@@ -571,3 +576,16 @@ loader
         window.console.log('oops... something went wrong...');
         window.console.log(error);
     });
+
+
+function isScrollPositive() {
+    return e.delta > 0;
+}
+
+function isOutOfPositiveBound() {
+    return stackHelper.index >= stack.dimensionsIJK.z - 1;
+}
+
+function isOutOfNegativeBounds() {
+    return stackHelper.index <= 0;
+}
