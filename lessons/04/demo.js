@@ -335,10 +335,15 @@ function buildGUI(stackHelper) {
     }
 
 
-    layer0Folder
-        .add(stackHelper.slice, 'interpolation', 0, 1)
-        .step(1)
-        .listen();
+    setInterpolationSlider();
+
+    function setInterpolationSlider() {
+        layer0Folder
+            .add(stackHelper.slice, 'interpolation', 0, 1)
+            .step(1)
+            .listen();
+    }
+
 
     layer0Folder.open();
 
