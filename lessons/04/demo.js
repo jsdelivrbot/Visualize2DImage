@@ -580,25 +580,36 @@ function handleSeries() {
 
     sceneLayer1.add(meshLayer1);
 
-    // Create the Mix layer
-    uniformsLayerMix = AMI.LayerUniformShader.uniforms();
-    uniformsLayerMix.uTextureBackTest0.value = sceneLayer0TextureTarget.texture;
-    uniformsLayerMix.uTextureBackTest1.value = sceneLayer1TextureTarget.texture;
+    createMixLayer();
 
-    let fls = new AMI.LayerFragmentShader(uniformsLayerMix);
-    let vls = new AMI.LayerVertexShader();
-    materialLayerMix = new THREE.ShaderMaterial({
-        side: THREE.DoubleSide,
-        uniforms: uniformsLayerMix,
-        vertexShader: vls.compute(),
-        fragmentShader: fls.compute(),
-        transparent: true,
-    });
+    function createMixLayer() {
+        uniformsLayerMix = AMI.LayerUniformShader.uniforms();
+        uniformsLayerMix.uTextureBackTest0.value = sceneLayer0TextureTarget.texture;
+        uniformsLayerMix.uTextureBackTest1.value = sceneLayer1TextureTarget.texture;
 
-    // add mesh in this scene with right shaders...
-    meshLayerMix = new THREE.Mesh(stackHelper.slice.geometry, materialLayer1);
-    // go the LPS space
-    meshLayerMix.applyMatrix(stack._ijk2LPS);
+        let fls = new AMI.LayerFragmentShader(uniformsLayerMix);
+        let vls = new AMI.LayerVertexShader();
+        materialLayerMix = new THREE.ShaderMaterial({
+            side: THREE.DoubleSide,
+            uniforms: uniformsLayerMix,
+            vertexShader: vls.compute(),
+            fragmentShader: fls.compute(),
+            transparent: true,
+        });
+    }
+
+    createMeshMixLayer();
+
+    function createMeshMixLayer() {
+        meshLayerMix = new THREE.Mesh(stackHelper.slice.geometry, materialLayer1);
+    }
+
+    convertMixLayerToLPSDICOMCoordinates();
+
+    function convertMixLayerToLPSDICOMCoordinates() {
+        meshLayerMix.applyMatrix(stack._ijk2LPS);
+    }
+
     sceneLayerMix.add(meshLayerMix);
 
     //
