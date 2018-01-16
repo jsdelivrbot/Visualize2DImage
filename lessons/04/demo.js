@@ -60,14 +60,34 @@ function init() {
         });
     }
 
-    // renderer
-    threeD = document.getElementById('container');
-    renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: true,
-    });
-    renderer.setSize(threeD.clientWidth, threeD.clientHeight);
-    renderer.setClearColor(0x607d8b, 1);
+    setRenderer();
+
+    function setRenderer() {
+        
+        createRenderer();
+
+        function createRenderer() {
+            threeD = document.getElementById('container');
+            const smoothBorders = true;
+            const opacity = true;
+            renderer = new THREE.WebGLRenderer({
+                antialias: smoothBorders,
+                alpha: opacity,
+            });
+        }
+
+        setupRenderer();
+
+        function setupRenderer() {
+            renderer.setSize(threeD.clientWidth, threeD.clientHeight);
+            const blueBackgroundColor = 0x607d8b;
+            const alpha = 1;
+            renderer.setClearColor(blueBackgroundColor, alpha);
+        }
+
+    }
+
+// renderer
 
     threeD.appendChild(renderer.domElement);
 
