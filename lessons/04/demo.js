@@ -210,10 +210,13 @@ function setLabelMap() {
 
 var files = dataFullPath.concat(labelmapFullPath);
 
-// load sequence for each file
-// instantiate the loader
-// it loads and parses the dicom image
-var loader = new AMI.VolumeLoader(threeD);
+var loader = loadAndParseData();
+
+function loadAndParseData() {
+    var loader = new AMI.VolumeLoader(threeD);
+    return loader;
+}
+
 
 /**
  * Build GUI
