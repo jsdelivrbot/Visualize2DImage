@@ -318,15 +318,22 @@ function buildGUI(stackHelper) {
         });
     }
 
+    setIndexSlider();
 
-    var indexUpdate = layer0Folder
-        .add(stackHelper, 'index', 0, stack.dimensionsIJK.z - 1)
-        .step(1)
-        .listen();
-    indexUpdate.onChange(function () {
-        updateLayer1();
-        updateLayerMix();
-    });
+    function setIndexSlider() {
+        const min = 0;
+        const max = stack.dimensionsIJK.z - 1;
+        var indexUpdate = layer0Folder
+            .add(stackHelper, 'index', min, max)
+            .step(1)
+            .listen();
+
+        indexUpdate.onChange(function () {
+            updateLayer1();
+            updateLayerMix();
+        });
+    }
+
 
     layer0Folder
         .add(stackHelper.slice, 'interpolation', 0, 1)
