@@ -452,37 +452,31 @@ function handleSeries() {
     }
 
 
-    //
-    //
-    // create labelmap....
-    // we only care about the geometry....
-    // get first stack from series
-    // prepare it
-    // * ijk2LPS transforms
-    // * Z spacing
-    // * etc.
-    //
-    stack2.prepare();
-    // pixels packing for the fragment shaders now happens there
-    stack2.pack();
+    var textures2 = setTextureFromRawData();
 
-    var textures2 = [];
-    for (var m = 0; m < stack2._rawData.length; m++) {
-        var tex = new THREE.DataTexture(
-            stack2.rawData[m],
-            stack2.textureSize,
-            stack2.textureSize,
-            stack2.textureType,
-            THREE.UnsignedByteType,
-            THREE.UVMapping,
-            THREE.ClampToEdgeWrapping,
-            THREE.ClampToEdgeWrapping,
-            THREE.NearestFilter,
-            THREE.NearestFilter
-        );
-        tex.needsUpdate = true;
-        tex.flipY = true;
-        textures2.push(tex);
+    function setTextureFromRawData() {
+        stack2.prepare();
+        stack2.pack();
+
+        var textures2 = [];
+        for (var m = 0; m < stack2._rawData.length; m++) {
+            var tex = new THREE.DataTexture(
+                stack2.rawData[m],
+                stack2.textureSize,
+                stack2.textureSize,
+                stack2.textureType,
+                THREE.UnsignedByteType,
+                THREE.UVMapping,
+                THREE.ClampToEdgeWrapping,
+                THREE.ClampToEdgeWrapping,
+                THREE.NearestFilter,
+                THREE.NearestFilter
+            );
+            tex.needsUpdate = true;
+            tex.flipY = true;
+            textures2.push(tex);
+        }
+        return textures2;
     }
 
     // create material && mesh then add it to sceneLayer1
