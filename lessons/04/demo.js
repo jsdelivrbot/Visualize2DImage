@@ -479,11 +479,31 @@ function handleSeries() {
         return textures2;
     }
 
-    // create material && mesh then add it to sceneLayer1
-    uniformsLayer1 = AMI.DataUniformShader.uniforms();
-    uniformsLayer1.uTextureSize.value = stack2.textureSize;
-    uniformsLayer1.uTextureContainer.value = textures2;
-    uniformsLayer1.uWorldToData.value = stack2.lps2IJK;
+    setShaderUsingTexturePositionColorBorder();
+
+    function setShaderUsingTexturePositionColorBorder() {
+        uniformsLayer1 = AMI.DataUniformShader.uniforms();
+    }
+
+    setTextureSize();
+
+    function setTextureSize() {
+        uniformsLayer1.uTextureSize.value = stack2.textureSize;
+    }
+
+    setTextureContainer();
+
+    function setTextureContainer() {
+        uniformsLayer1.uTextureContainer.value = textures2;
+    }
+
+    convertLeftPosteriorSuperiorDICOMCorrdinatesTo2DWorldCoordinates();
+
+    function convertLeftPosteriorSuperiorDICOMCorrdinatesTo2DWorldCoordinates() {
+        uniformsLayer1.uWorldToData.value = stack2.lps2IJK;
+    }
+
+// create material && mesh then add it to sceneLayer1
     uniformsLayer1.uNumberOfChannels.value = stack2.numberOfChannels;
     uniformsLayer1.uPixelType.value = stack2.pixelType;
     uniformsLayer1.uBitsAllocated.value = stack2.bitsAllocated;
