@@ -390,26 +390,24 @@ function buildGUI(stackHelper) {
         });
     }
 
-// hook up callbacks
-
     updateLayer1();
     updateLayerMix();
 
-    /**
-     * Handle window resize
-     */
+
     function onWindowResize() {
         var threeD = document.getElementById('container');
         camera.canvas = {
             width: threeD.clientWidth,
             height: threeD.clientHeight,
         };
-        camera.fitBox(2);
+        const directionsUsedToResizeImage = 2;
+        camera.fitBox(directionsUsedToResizeImage);
 
         renderer.setSize(threeD.clientWidth, threeD.clientHeight);
     }
 
-    window.addEventListener('resize', onWindowResize, false);
+    const useCaptureToExecuteEventOnWindowLoad = false;
+    window.addEventListener('resize', onWindowResize, useCaptureToExecuteEventOnWindowLoad);
     onWindowResize();
 }
 
