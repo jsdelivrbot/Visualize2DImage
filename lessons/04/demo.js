@@ -104,18 +104,25 @@ function init() {
         sceneLayerMix = new THREE.Scene();
     }
 
-    // render to texture!!!!
-    sceneLayer0TextureTarget = new THREE.WebGLRenderTarget(threeD.clientWidth, threeD.clientHeight, {
-        minFilter: THREE.LinearFilter,
-        magFilter: THREE.NearestFilter,
-        format: THREE.RGBAFormat,
-    });
+    renderFirstLayerAsTexture();
 
-    sceneLayer1TextureTarget = new THREE.WebGLRenderTarget(threeD.clientWidth, threeD.clientHeight, {
-        minFilter: THREE.LinearFilter,
-        magFilter: THREE.NearestFilter,
-        format: THREE.RGBAFormat,
-    });
+    function renderFirstLayerAsTexture() {
+        sceneLayer0TextureTarget = new THREE.WebGLRenderTarget(threeD.clientWidth, threeD.clientHeight, {
+            minFilter: THREE.LinearFilter,
+            magFilter: THREE.NearestFilter,
+            format: THREE.RGBAFormat,
+        });
+    }
+
+    renderSecondLayerAsTexture();
+
+    function renderSecondLayerAsTexture() {
+        sceneLayer1TextureTarget = new THREE.WebGLRenderTarget(threeD.clientWidth, threeD.clientHeight, {
+            minFilter: THREE.LinearFilter,
+            magFilter: THREE.NearestFilter,
+            format: THREE.RGBAFormat,
+        });
+    }
 
     // camera
     camera = new AMI.OrthographicCamera(
