@@ -347,12 +347,25 @@ function buildGUI(stackHelper) {
 
     layer0Folder.open();
 
-    // layer mix folder
-    var layerMixFolder = gui.addFolder('Segmentation');
-    var opacityLayerMix1 = layerMixFolder.add(layerMix, 'opacity1', 0, 1).step(0.01);
-    opacityLayerMix1.onChange(function (value) {
-        uniformsLayerMix.uOpacity1.value = value;
-    });
+    var layerMixFolder = setSegmentationPanel();
+
+    function setSegmentationPanel() {
+        var layerMixFolder = gui.addFolder('Segmentation');
+        return layerMixFolder;
+    }
+
+
+    setOpacitySlider();
+
+    function setOpacitySlider() {
+        const min = 0;
+        const max = 1;
+        var opacityLayerMix1 = layerMixFolder.add(layerMix, 'opacity1', min, max).step(0.01);
+        opacityLayerMix1.onChange(function (value) {
+            uniformsLayerMix.uOpacity1.value = value;
+        });
+    }
+
 
     layerMixFolder.open();
 
