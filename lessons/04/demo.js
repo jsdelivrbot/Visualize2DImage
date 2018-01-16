@@ -411,30 +411,46 @@ function buildGUI(stackHelper) {
     onWindowResize();
 }
 
-/**
- * Handle series
- */
 function handleSeries() {
-    //
-    //
-    // first stack of first series
-    var mergedSeries = loader.data[0].mergeSeries(loader.data);
-    var stack = mergedSeries[0].stack[0];
-    var stack2 = mergedSeries[1].stack[0];
-    loader.free();
-    loader = null;
 
-    if (stack.modality === 'SEG') {
+    var {mergedSeries, stack, stack2} = setStack();
+
+    function setStack() {
+        var mergedSeries = loader.data[0].mergeSeries(loader.data);
+        var stack = mergedSeries[0].stack[0];
+        var stack2 = mergedSeries[1].stack[0];
+        return {mergedSeries, stack, stack2};
+    }
+
+    closeLoader();
+
+    function closeLoader() {
+        loader.free();
+        loader = null;
+    }
+
+
+    if (isImageSegmented()) {
         stack = mergedSeries[0].stack[0];
         stack2 = mergedSeries[1].stack[0];
     }
 
-    var stackHelper = new AMI.StackHelper(stack);
-    stackHelper.bbox.visible = false;
-    stackHelper.border.visible = false;
-    stackHelper.index = 10;
+    function isImageSegmented() {
+        return stack.modality === 'SEG';
+    }
 
-    sceneLayer0.add(stackHelper);
+    var stackHelper = setStackHelper();
+
+    function setStackHelper() {
+        var stackHelper = new AMI.StackHelper(stack);
+        stackHelper.bbox.visible = false;
+        stackHelper.border.visible = false;
+        stackHelper.index = 10;
+
+        sceneLayer0.add(stackHelper);
+        return stackHelper;
+    }
+
 
     //
     //
