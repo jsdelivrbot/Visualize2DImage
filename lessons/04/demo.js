@@ -553,20 +553,31 @@ function handleSeries() {
     }
 
 
-    // generate shaders on-demand!
-    var fs = new AMI.DataFragmentShader(uniformsLayer1);
-    var vs = new AMI.DataVertexShader();
-    materialLayer1 = new THREE.ShaderMaterial({
-        side: THREE.DoubleSide,
-        uniforms: uniformsLayer1,
-        vertexShader: vs.compute(),
-        fragmentShader: fs.compute(),
-    });
+    createShadersToRepresentSegment();
 
-    // add mesh in this scene with right shaders...
-    meshLayer1 = new THREE.Mesh(stackHelper.slice.geometry, materialLayer1);
-    // go the LPS space
-    meshLayer1.applyMatrix(stack._ijk2LPS);
+    function createShadersToRepresentSegment() {
+        var fs = new AMI.DataFragmentShader(uniformsLayer1);
+        var vs = new AMI.DataVertexShader();
+        materialLayer1 = new THREE.ShaderMaterial({
+            side: THREE.DoubleSide,
+            uniforms: uniformsLayer1,
+            vertexShader: vs.compute(),
+            fragmentShader: fs.compute(),
+        });
+    }
+
+    createMeshWIthShaders();
+
+    function createMeshWIthShaders() {
+        meshLayer1 = new THREE.Mesh(stackHelper.slice.geometry, materialLayer1);
+    }
+
+    convertToLeftPosteriorSuperiorDICOMCorrdinates();
+
+    function convertToLeftPosteriorSuperiorDICOMCorrdinates() {
+        meshLayer1.applyMatrix(stack._ijk2LPS);
+    }
+
     sceneLayer1.add(meshLayer1);
 
     // Create the Mix layer
