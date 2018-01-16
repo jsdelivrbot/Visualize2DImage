@@ -235,19 +235,36 @@ function buildGUI(stackHelper) {
     /**
      * Update layer mix
      */
-    function updateLayerMix() {
-        // update layer1 geometry...
-        if (meshLayerMix) {
-            sceneLayerMix.remove(meshLayerMix);
-            meshLayerMix.material.dispose();
-            meshLayerMix.material = null;
-            meshLayerMix.geometry.dispose();
-            meshLayerMix.geometry = null;
 
-            // add mesh in this scene with right shaders...
-            meshLayerMix = new THREE.Mesh(stackHelper.slice.geometry, materialLayerMix);
-            // go the LPS space
-            meshLayerMix.applyMatrix(stackHelper.stack._ijk2LPS);
+// update layer1 geometry...
+    function updateLayerMix() {
+
+
+        if (meshLayerMix) {
+            resetLayerMix();
+
+            function resetLayerMix() {
+                sceneLayerMix.remove(meshLayerMix);
+                meshLayerMix.material.dispose();
+                meshLayerMix.material = null;
+                meshLayerMix.geometry.dispose();
+                meshLayerMix.geometry = null;
+            }
+
+            addMeshToLayerMix();
+
+            function addMeshToLayerMix() {
+                const geometry = stackHelper.slice.geometry;
+                const material = materialLayerMix;
+                meshLayerMix = new THREE.Mesh(geometry, material);
+            }
+
+
+            convertCoordinateSystemFromIJKToLeftPosteriorSuperior();
+
+            function convertCoordinateSystemFromIJKToLeftPosteriorSuperior() {
+                meshLayerMix.applyMatrix(stackHelper.stack._ijk2LPS);
+            }
 
             sceneLayerMix.add(meshLayerMix);
         }
