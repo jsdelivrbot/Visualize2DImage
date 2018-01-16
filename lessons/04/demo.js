@@ -63,7 +63,7 @@ function init() {
     setRenderer();
 
     function setRenderer() {
-        
+
         createRenderer();
 
         function createRenderer() {
@@ -83,17 +83,18 @@ function init() {
             const blueBackgroundColor = 0x607d8b;
             const alpha = 1;
             renderer.setClearColor(blueBackgroundColor, alpha);
+            threeD.appendChild(renderer.domElement);
         }
 
     }
 
-// renderer
 
-    threeD.appendChild(renderer.domElement);
+    setStats();
 
-    // stats
-    statsyay = new Stats();
-    threeD.appendChild(statsyay.domElement);
+    function setStats() {
+        statsyay = new Stats();
+        threeD.appendChild(statsyay.domElement);
+    }
 
     // scene
     sceneLayer0 = new THREE.Scene();
