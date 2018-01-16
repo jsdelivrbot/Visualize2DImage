@@ -369,19 +369,17 @@ function buildGUI(stackHelper) {
 
     layerMixFolder.open();
 
-    addScrollControlToChangeCurrentSliceUsingIndex();
+    addScrollControlToChangeCurrentSlice();
 
-    function addScrollControlToChangeCurrentSliceUsingIndex() {
+    function addScrollControlToChangeCurrentSlice() {
         controls.addEventListener('OnScroll', function (e) {
-
-
-            if (isScrollPositive()) {
-                if (isOutOfPositiveBound()) {
+            if (e.delta > 0) {
+                if (stackHelper.index >= stack.dimensionsIJK.z - 1) {
                     return false;
                 }
                 stackHelper.index += 1;
             } else {
-                if (isOutOfNegativeBounds()) {
+                if (stackHelper.index <= 0) {
                     return false;
                 }
                 stackHelper.index -= 1;
@@ -392,22 +390,26 @@ function buildGUI(stackHelper) {
         });
     }
 
+// hook up callbacks
+
     updateLayer1();
     updateLayerMix();
 
+    /**
+     * Handle window resize
+     */
     function onWindowResize() {
         var threeD = document.getElementById('container');
         camera.canvas = {
             width: threeD.clientWidth,
             height: threeD.clientHeight,
         };
-        const numerOfDirectionsUsedToRecalculateSize = 2;
-        camera.fitBox(numerOfDirectionsUsedToRecalculateSize);
+        camera.fitBox(2);
+
         renderer.setSize(threeD.clientWidth, threeD.clientHeight);
     }
 
-    const useCaptureToAttachEventOnWindowLoad = false;
-    window.addEventListener('resize', onWindowResize, useCaptureToAttachEventOnWindowLoad);
+    window.addEventListener('resize', onWindowResize, false);
     onWindowResize();
 }
 
@@ -574,16 +576,3 @@ loader
         window.console.log('oops... something went wrong...');
         window.console.log(error);
     });
-
-
-function isScrollPositive() {
-    return e.delta > 0;
-}
-
-function isOutOfPositiveBound() {
-    return stackHelper.index >= stack.dimensionsIJK.z - 1;
-}
-
-function isOutOfNegativeBounds() {
-    return stackHelper.index <= 0;
-}
