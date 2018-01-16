@@ -144,11 +144,16 @@ function init() {
     }
 
 
-    // controls
-    controls = new AMI.TrackballOrthoControl(camera, threeD);
-    controls.staticMoving = true;
-    controls.noRotate = true;
-    camera.controls = controls;
+    setControls();
+
+    function setControls() {
+        controls = new AMI.TrackballOrthoControl(camera, threeD);
+        const smoothMove = true;
+        controls.staticMoving = smoothMove;
+        controls.noRotate = true;
+        camera.controls = controls;
+    }
+
 
     animate();
 }
