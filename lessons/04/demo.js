@@ -196,11 +196,17 @@ function setData() {
 }
 
 
-var labelmap = ['000000.dcm'];
+var labelmapFullPath = setLabelMap();
 
-var labelmapFullPath = labelmap.map(function (v) {
-    return rawgit + 'segmentation/' + v;
-});
+function setLabelMap() {
+    var labelmap = ['000000.dcm'];
+
+    var labelmapFullPath = labelmap.map(function (currentData) {
+        return rawgit + 'segmentation/' + currentData;
+    });
+    return labelmapFullPath;
+}
+
 
 var files = dataFullPath.concat(labelmapFullPath);
 
