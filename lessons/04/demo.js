@@ -395,21 +395,19 @@ function buildGUI(stackHelper) {
     updateLayer1();
     updateLayerMix();
 
-    /**
-     * Handle window resize
-     */
     function onWindowResize() {
         var threeD = document.getElementById('container');
         camera.canvas = {
             width: threeD.clientWidth,
             height: threeD.clientHeight,
         };
-        camera.fitBox(2);
-
+        const numerOfDirectionsUsedToRecalculateSize = 2;
+        camera.fitBox(numerOfDirectionsUsedToRecalculateSize);
         renderer.setSize(threeD.clientWidth, threeD.clientHeight);
     }
 
-    window.addEventListener('resize', onWindowResize, false);
+    const useCaptureToAttachEventOnWindowLoad = false;
+    window.addEventListener('resize', onWindowResize, useCaptureToAttachEventOnWindowLoad);
     onWindowResize();
 }
 
