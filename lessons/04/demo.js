@@ -270,23 +270,54 @@ function buildGUI(stackHelper) {
         }
     }
 
-    var stack = stackHelper.stack;
+    var {stack, gui} = createGui();
 
-    var gui = new dat.GUI({
-        autoPlace: false,
-    });
+    function createGui() {
+        var stack = stackHelper.stack;
 
-    var customContainer = document.getElementById('my-gui-container');
-    customContainer.appendChild(gui.domElement);
+        var gui = new dat.GUI({
+            autoPlace: false,
+        });
+        return {stack, gui};
+    }
 
-    var layer0Folder = gui.addFolder('CT');
-    layer0Folder.add(stackHelper.slice, 'invert');
 
-    var lutUpdate = layer0Folder.add(stackHelper.slice, 'lut', lutLayer0.lutsAvailable());
-    lutUpdate.onChange(function (value) {
-        lutLayer0.lut = value;
-        stackHelper.slice.lutTexture = lutLayer0.texture;
-    });
+    setGuiIntoDOM();
+
+    function setGuiIntoDOM() {
+        var customContainer = document.getElementById('my-gui-container');
+        customContainer.appendChild(gui.domElement);
+    }
+
+
+    var layer0Folder = createCTPanel();
+
+    function createCTPanel() {
+        const CTLabel = 'CT';
+        var layer0Folder = gui.addFolder(CTLabel);
+        return layer0Folder;
+    }
+
+
+    setInvertCheckBox();
+
+    function setInvertCheckBox() {
+        layer0Folder.add(stackHelper.slice, 'invert');
+    }
+
+
+    setColorSchemasDropDown();
+
+    function setColorSchemasDropDown() {
+
+
+        var lutUpdate = layer0Folder.add(stackHelper.slice, 'lut', lutLayer0.lutsAvailable());
+        lutUpdate.onChange(function (value) {
+            lutLayer0.lut = value;
+            stackHelper.slice.lutTexture = lutLayer0.texture;
+        });
+    }
+
 
     var indexUpdate = layer0Folder
         .add(stackHelper, 'index', 0, stack.dimensionsIJK.z - 1)
