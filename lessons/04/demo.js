@@ -217,23 +217,20 @@ function loadAndParseData() {
     return loader;
 }
 
-
-/**
- * Build GUI
- */
 function buildGUI(stackHelper) {
-    /**
-     * Update Layer 1
-     */
+
     function updateLayer1() {
-        // update layer1 geometry...
         if (meshLayer1) {
-            // dispose geometry first
-            meshLayer1.geometry.dispose();
-            meshLayer1.geometry = stackHelper.slice.geometry;
-            meshLayer1.geometry.verticesNeedUpdate = true;
+            bundleSlicesToMesh();
         }
     }
+
+    function bundleSlicesToMesh() {
+        meshLayer1.geometry.dispose();
+        meshLayer1.geometry = stackHelper.slice.geometry;
+        meshLayer1.geometry.verticesNeedUpdate = true;
+    }
+
 
     /**
      * Update layer mix
