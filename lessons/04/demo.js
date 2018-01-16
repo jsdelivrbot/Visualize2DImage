@@ -124,15 +124,25 @@ function init() {
         });
     }
 
-    // camera
-    camera = new AMI.OrthographicCamera(
-        threeD.clientWidth / -2,
-        threeD.clientWidth / 2,
-        threeD.clientHeight / 2,
-        threeD.clientHeight / -2,
-        0.1,
-        10000
-    );
+    setCamera();
+
+    function setCamera() {
+        const left = threeD.clientWidth / -2;
+        const right = threeD.clientWidth / 2;
+        const top = threeD.clientHeight / 2;
+        const bottom = threeD.clientHeight / -2;
+        const near = 0.1;
+        const far = 10000;
+        camera = new AMI.OrthographicCamera(
+            left,
+            right,
+            top,
+            bottom,
+            near,
+            far
+        );
+    }
+
 
     // controls
     controls = new AMI.TrackballOrthoControl(camera, threeD);
