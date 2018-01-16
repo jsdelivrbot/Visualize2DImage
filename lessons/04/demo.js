@@ -485,15 +485,15 @@ function handleSeries() {
         uniformsLayer1 = AMI.DataUniformShader.uniforms();
     }
 
-    setTextureSize();
+    setShaderTextureSize();
 
-    function setTextureSize() {
+    function setShaderTextureSize() {
         uniformsLayer1.uTextureSize.value = stack2.textureSize;
     }
 
-    setTextureContainer();
+    setShaderTextureContainer();
 
-    function setTextureContainer() {
+    function setShaderTextureContainer() {
         uniformsLayer1.uTextureContainer.value = textures2;
     }
 
@@ -503,14 +503,55 @@ function handleSeries() {
         uniformsLayer1.uWorldToData.value = stack2.lps2IJK;
     }
 
-// create material && mesh then add it to sceneLayer1
-    uniformsLayer1.uNumberOfChannels.value = stack2.numberOfChannels;
-    uniformsLayer1.uPixelType.value = stack2.pixelType;
-    uniformsLayer1.uBitsAllocated.value = stack2.bitsAllocated;
-    uniformsLayer1.uWindowCenterWidth.value = [stack2.windowCenter, stack2.windowWidth];
-    uniformsLayer1.uRescaleSlopeIntercept.value = [stack2.rescaleSlope, stack2.rescaleIntercept];
-    uniformsLayer1.uDataDimensions.value = [stack2.dimensionsIJK.x, stack2.dimensionsIJK.y, stack2.dimensionsIJK.z];
-    uniformsLayer1.uInterpolation.value = 0;
+    setShaderTextureNumberOfChannels();
+
+    function setShaderTextureNumberOfChannels() {
+        uniformsLayer1.uNumberOfChannels.value = stack2.numberOfChannels;
+    }
+
+    setShaderTexturePixelTypeAsIntOrFloat();
+
+    function setShaderTexturePixelTypeAsIntOrFloat() {
+        uniformsLayer1.uPixelType.value = stack2.pixelType;
+    }
+
+    setAllocatedBits();
+
+    function setAllocatedBits() {
+        uniformsLayer1.uBitsAllocated.value = stack2.bitsAllocated;
+    }
+
+    setShaderTextureCenter();
+
+    function setShaderTextureCenter() {
+        const windowCenter = stack2.windowCenter;
+        const windowWidth = stack2.windowWidth;
+        uniformsLayer1.uWindowCenterWidth.value = [windowCenter, windowWidth];
+    }
+
+    setShaderTextureRescaleSlope();
+
+    function setShaderTextureRescaleSlope() {
+        const rescaleSlope = stack2.rescaleSlope;
+        const rescaleIntercept = stack2.rescaleIntercept;
+        uniformsLayer1.uRescaleSlopeIntercept.value = [rescaleSlope, rescaleIntercept];
+    }
+
+    setShaderTextureDataDimensions();
+
+    function setShaderTextureDataDimensions() {
+        const xDimension = stack2.dimensionsIJK.x;
+        const yDimension = stack2.dimensionsIJK.y;
+        const zDimension = stack2.dimensionsIJK.z;
+        uniformsLayer1.uDataDimensions.value = [xDimension, yDimension, zDimension];
+    }
+
+    setShaderTextureInterpolationMode();
+
+    function setShaderTextureInterpolationMode() {
+        uniformsLayer1.uInterpolation.value = 0;
+    }
+
 
     // generate shaders on-demand!
     var fs = new AMI.DataFragmentShader(uniformsLayer1);
