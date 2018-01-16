@@ -612,10 +612,16 @@ function handleSeries() {
 
     sceneLayerMix.add(meshLayerMix);
 
-    //
-    // set camera
-    var worldbb = stack.worldBoundingBox();
-    var lpsDims = new THREE.Vector3(worldbb[1] - worldbb[0], worldbb[3] - worldbb[2], worldbb[5] - worldbb[4]);
+    var lpsDims = setCamera();
+
+    function setCamera() {
+        var worldbb = stack.worldBoundingBox();
+        const widthLPSDimension = worldbb[1] - worldbb[0];
+        const heightLPSDimension = worldbb[3] - worldbb[2];
+        const depthLPSDimension = worldbb[5] - worldbb[4];
+        var lpsDims = new THREE.Vector3(widthLPSDimension, heightLPSDimension, depthLPSDimension);
+        return lpsDims;
+    }
 
     // box: {halfDimensions, center}
     var box = {
