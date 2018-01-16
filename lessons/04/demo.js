@@ -96,10 +96,13 @@ function init() {
         threeD.appendChild(statsyay.domElement);
     }
 
-    // scene
-    sceneLayer0 = new THREE.Scene();
-    sceneLayer1 = new THREE.Scene();
-    sceneLayerMix = new THREE.Scene();
+    setScene();
+
+    function setScene() {
+        sceneLayer0 = new THREE.Scene();
+        sceneLayer1 = new THREE.Scene();
+        sceneLayerMix = new THREE.Scene();
+    }
 
     // render to texture!!!!
     sceneLayer0TextureTarget = new THREE.WebGLRenderTarget(threeD.clientWidth, threeD.clientHeight, {
