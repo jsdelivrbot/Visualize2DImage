@@ -27,26 +27,35 @@ var layerMix = {
     opacity1: 1.0,
 };
 
-/**
- * Init the scene
- */
+
 function init() {
-    /**
-   * Animation loop
-   */
+
     function animate() {
         // render
         controls.update();
-        // render first layer offscreen
-        renderer.render(sceneLayer0, camera, sceneLayer0TextureTarget, true);
-        // render second layer offscreen
-        renderer.render(sceneLayer1, camera, sceneLayer1TextureTarget, true);
-        // mix the layers and render it ON screen!
-        renderer.render(sceneLayerMix, camera);
-        statsyay.update();
 
-        // request new frame
-        requestAnimationFrame(function() {
+        renderFirstLayerOffScreen();
+
+        function renderFirstLayerOffScreen() {
+            const forceClear = true;
+            renderer.render(sceneLayer0, camera, sceneLayer0TextureTarget, forceClear);
+        }
+
+        renderSecondLayerOffScreen();
+
+        function renderSecondLayerOffScreen() {
+            const forceClear = true;
+            renderer.render(sceneLayer1, camera, sceneLayer1TextureTarget, forceClear);
+        }
+
+        mixTheLayersAndRenderItOnScreen();
+
+        function mixTheLayersAndRenderItOnScreen() {
+            renderer.render(sceneLayerMix, camera);
+            statsyay.update();
+        }
+
+        requestAnimationFrame(function () {
             animate();
         });
     }
@@ -132,13 +141,13 @@ var data = [
 
 var rawgit = 'https://cdn.rawgit.com/FNNDSC/data/master/dicom/andrei_abdomen/';
 
-var dataFullPath = data.map(function(v) {
+var dataFullPath = data.map(function (v) {
     return rawgit + 'data/' + v;
 });
 
 var labelmap = ['000000.dcm'];
 
-var labelmapFullPath = labelmap.map(function(v) {
+var labelmapFullPath = labelmap.map(function (v) {
     return rawgit + 'segmentation/' + v;
 });
 
@@ -154,8 +163,8 @@ var loader = new AMI.VolumeLoader(threeD);
  */
 function buildGUI(stackHelper) {
     /**
-   * Update Layer 1
-   */
+     * Update Layer 1
+     */
     function updateLayer1() {
         // update layer1 geometry...
         if (meshLayer1) {
@@ -167,8 +176,8 @@ function buildGUI(stackHelper) {
     }
 
     /**
-   * Update layer mix
-   */
+     * Update layer mix
+     */
     function updateLayerMix() {
         // update layer1 geometry...
         if (meshLayerMix) {
@@ -200,7 +209,7 @@ function buildGUI(stackHelper) {
     layer0Folder.add(stackHelper.slice, 'invert');
 
     var lutUpdate = layer0Folder.add(stackHelper.slice, 'lut', lutLayer0.lutsAvailable());
-    lutUpdate.onChange(function(value) {
+    lutUpdate.onChange(function (value) {
         lutLayer0.lut = value;
         stackHelper.slice.lutTexture = lutLayer0.texture;
     });
@@ -209,7 +218,7 @@ function buildGUI(stackHelper) {
         .add(stackHelper, 'index', 0, stack.dimensionsIJK.z - 1)
         .step(1)
         .listen();
-    indexUpdate.onChange(function() {
+    indexUpdate.onChange(function () {
         updateLayer1();
         updateLayerMix();
     });
@@ -224,14 +233,14 @@ function buildGUI(stackHelper) {
     // layer mix folder
     var layerMixFolder = gui.addFolder('Segmentation');
     var opacityLayerMix1 = layerMixFolder.add(layerMix, 'opacity1', 0, 1).step(0.01);
-    opacityLayerMix1.onChange(function(value) {
+    opacityLayerMix1.onChange(function (value) {
         uniformsLayerMix.uOpacity1.value = value;
     });
 
     layerMixFolder.open();
 
     // hook up callbacks
-    controls.addEventListener('OnScroll', function(e) {
+    controls.addEventListener('OnScroll', function (e) {
         if (e.delta > 0) {
             if (stackHelper.index >= stack.dimensionsIJK.z - 1) {
                 return false;
@@ -252,8 +261,8 @@ function buildGUI(stackHelper) {
     updateLayerMix();
 
     /**
-   * Handle window resize
-   */
+     * Handle window resize
+     */
     function onWindowResize() {
         var threeD = document.getElementById('container');
         camera.canvas = {
@@ -264,6 +273,7 @@ function buildGUI(stackHelper) {
 
         renderer.setSize(threeD.clientWidth, threeD.clientHeight);
     }
+
     window.addEventListener('resize', onWindowResize, false);
     onWindowResize();
 }
@@ -424,10 +434,10 @@ function handleSeries() {
 
 loader
     .load(files)
-    .then(function() {
+    .then(function () {
         handleSeries();
     })
-    .catch(function(error) {
+    .catch(function (error) {
         window.console.log('oops... something went wrong...');
         window.console.log(error);
     });
