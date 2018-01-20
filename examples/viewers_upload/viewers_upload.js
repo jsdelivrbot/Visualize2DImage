@@ -335,8 +335,6 @@ window.onload = function () {
             }
 
         }
-
-// camera
     }
 
     /**
@@ -344,20 +342,24 @@ window.onload = function () {
      */
     function hookCallbacks(stackHelper) {
         let stack = stackHelper._stack;
-        // hook up callbacks
-        controls.addEventListener('OnScroll', function (e) {
-            if (e.delta > 0) {
-                if (stackHelper.index >= stackHelper.orientationMaxIndex - 1) {
-                    return false;
+
+        setOnScrollControl();
+
+        function setOnScrollControl() {
+            controls.addEventListener('OnScroll', function (e) {
+                if (e.delta > 0) {
+                    if (stackHelper.index >= stackHelper.orientationMaxIndex - 1) {
+                        return false;
+                    }
+                    stackHelper.index += 1;
+                } else {
+                    if (stackHelper.index <= 0) {
+                        return false;
+                    }
+                    stackHelper.index -= 1;
                 }
-                stackHelper.index += 1;
-            } else {
-                if (stackHelper.index <= 0) {
-                    return false;
-                }
-                stackHelper.index -= 1;
-            }
-        });
+            });
+        }
 
         /**
          * On window resize callback
@@ -448,34 +450,61 @@ window.onload = function () {
 
         console.log(stackHelper.stack);
 
-        // set camera
-        let worldbb = stack.worldBoundingBox();
-        let lpsDims = new THREE.Vector3(
-            (worldbb[1] - worldbb[0]) / 2,
-            (worldbb[3] - worldbb[2]) / 2,
-            (worldbb[5] - worldbb[4]) / 2
-        );
+        setCamera();
 
-        // box: {halfDimensions, center}
-        let box = {
-            center: stack.worldCenter().clone(),
-            halfDimensions:
-                new THREE.Vector3(lpsDims.x + 10, lpsDims.y + 10, lpsDims.z + 10),
-        };
+        function setCamera() {
+            let lpsDims = calculateLPSCoordinates();
 
-        // init and zoom
-        let canvas = {
-            width: threeD.clientWidth,
-            height: threeD.clientHeight,
-        };
+            function calculateLPSCoordinates() {
+                let worldbb = stack.worldBoundingBox();
+                const leftRightDimension = (worldbb[1] - worldbb[0]) / 2;
+                const posteriorAnteriorDimension = (worldbb[3] - worldbb[2]) / 2;
+                const superiorInferiorDimension = (worldbb[5] - worldbb[4]) / 2;
+                let lpsDims = new THREE.Vector3(
+                    leftRightDimension,
+                    posteriorAnteriorDimension,
+                    superiorInferiorDimension
+                );
+                return lpsDims;
+            }
 
-        camera.directions = [stack.xCosine, stack.yCosine, stack.zCosine];
-        camera.box = box;
-        camera.canvas = canvas;
-        camera.update();
-        camera.fitBox(2);
 
-        updateLabels(camera.directionsLabel, stack.modality);
+            let box = calculateCameraFieldOfView();
+
+            function calculateCameraFieldOfView() {
+                let box = {
+                    center: stack.worldCenter().clone(),
+                    halfDimensions:
+                        new THREE.Vector3(lpsDims.x + 10, lpsDims.y + 10, lpsDims.z + 10),
+                };
+                return box;
+            }
+
+            let canvas = createCanvas();
+
+            function createCanvas() {
+                let canvas = {
+                    width: threeD.clientWidth,
+                    height: threeD.clientHeight,
+                };
+                return canvas;
+            }
+
+
+            configureCamera();
+
+            function configureCamera() {
+                camera.directions = [stack.xCosine, stack.yCosine, stack.zCosine];
+                camera.box = box;
+                camera.canvas = canvas;
+                camera.update();
+                camera.fitBox(2);
+            }
+
+
+            updateLabels(camera.directionsLabel, stack.modality);
+        }
+
         buildGUI(stackHelper);
         hookCallbacks(stackHelper);
     }
