@@ -127,25 +127,70 @@ window.onload = function () {
     }
 
     function buildGUI(stackHelper) {
-        let stack = stackHelper._stack;
+        let {stack, gui} = createGui();
 
-        let gui = new dat.GUI({
-            autoPlace: false,
-        });
+        function createGui() {
+            let stack = stackHelper._stack;
 
-        let customContainer = document.getElementById('my-gui-container');
-        customContainer.appendChild(gui.domElement);
+            let gui = new dat.GUI({
+                autoPlace: false,
+            });
 
-        let stackFolder = gui.addFolder('Stack');
-        stackFolder.add(
-            stackHelper.slice, 'windowWidth', 1, stack.minMax[1] - stack.minMax[0])
-            .step(1).listen();
-        stackFolder.add(
-            stackHelper.slice, 'windowCenter', stack.minMax[0], stack.minMax[1])
-            .step(1).listen();
-        stackFolder.add(stackHelper.slice, 'intensityAuto').listen();
-        stackFolder.add(stackHelper.slice, 'invert');
-        stackFolder.add(stackHelper.slice, 'interpolation', 0, 1).step(1).listen();
+            let customContainer = document.getElementById('my-gui-container');
+            customContainer.appendChild(gui.domElement);
+            return {stack, gui};
+        }
+
+
+        let stackFolder = createStackFolderOnGui();
+
+        function createStackFolderOnGui() {
+            let stackFolder = gui.addFolder('Stack');
+            return stackFolder;
+        }
+
+
+        setWindowWidth();
+
+        function setWindowWidth() {
+            const minWidth = 1;
+            const maxWidth = stack.minMax[1] - stack.minMax[0];
+            stackFolder.add(
+                stackHelper.slice, 'windowWidth', minWidth, maxWidth)
+                .step(1).listen();
+        }
+
+        setWindowCenter();
+
+        function setWindowCenter() {
+            const minCenter = stack.minMax[0];
+            const maxCenter = stack.minMax[1];
+            stackFolder.add(
+                stackHelper.slice, 'windowCenter', minCenter, maxCenter)
+                .step(1).listen();
+        }
+
+        setIntensity();
+
+        function setIntensity() {
+            stackFolder.add(stackHelper.slice, 'intensityAuto').listen();
+        }
+
+        setInvert();
+
+        function setInvert() {
+            stackFolder.add(stackHelper.slice, 'invert');
+        }
+
+
+        setInterpolation();
+
+        function setInterpolation() {
+            const minInterpolation = 0;
+            const maxInterpolation = 1;
+            stackFolder.add(stackHelper.slice, 'interpolation', minInterpolation, maxInterpolation).step(1).listen();
+        }
+
 
         // CREATE LUT
         lut = new HelpersLut(
