@@ -239,7 +239,7 @@ window.onload = function () {
         }
 
         let index = setIndex();
-        
+
         function setIndex() {
             const minIndex = 0;
             const maxIndex = stack.dimensionsIJK.z - 1;
@@ -250,52 +250,89 @@ window.onload = function () {
 
         stackFolder.open();
 
-        // camera
-        let cameraFolder = gui.addFolder('Camera');
-        let invertRows = cameraFolder.add(camUtils, 'invertRows');
-        invertRows.onChange(function () {
-            camera.invertRows();
-            updateLabels(camera.directionsLabel, stack.modality);
-        });
+        createCameraFolderOnGui();
 
-        let invertColumns = cameraFolder.add(camUtils, 'invertColumns');
-        invertColumns.onChange(function () {
-            camera.invertColumns();
-            updateLabels(camera.directionsLabel, stack.modality);
-        });
+        function createCameraFolderOnGui() {
+            let cameraFolder = gui.addFolder('Camera');
 
-        let angle = cameraFolder.add(camera, 'angle', 0, 360).step(1).listen();
-        angle.onChange(function () {
-            updateLabels(camera.directionsLabel, stack.modality);
-        });
+            setInvertRows();
 
-        let rotate = cameraFolder.add(camUtils, 'rotate');
-        rotate.onChange(function () {
-            camera.rotate();
-            updateLabels(camera.directionsLabel, stack.modality);
-        });
+            function setInvertRows() {
+                let invertRows = cameraFolder.add(camUtils, 'invertRows');
+                invertRows.onChange(function () {
+                    camera.invertRows();
+                    updateLabels(camera.directionsLabel, stack.modality);
+                });
+            }
 
-        let orientationUpdate = cameraFolder.add(
-            camUtils, 'orientation', ['default', 'axial', 'coronal', 'sagittal']);
-        orientationUpdate.onChange(function (value) {
-            camera.orientation = value;
-            camera.update();
-            camera.fitBox(2);
-            stackHelper.orientation = camera.stackOrientation;
-            updateLabels(camera.directionsLabel, stack.modality);
 
-            index.__max = stackHelper.orientationMaxIndex;
-            stackHelper.index = Math.floor(index.__max / 2);
-        });
+            function setInvertColumns() {
+                let invertColumns = cameraFolder.add(camUtils, 'invertColumns');
+                invertColumns.onChange(function () {
+                    camera.invertColumns();
+                    updateLabels(camera.directionsLabel, stack.modality);
+                });
+            }
 
-        let conventionUpdate = cameraFolder.add(
-            camUtils, 'convention', ['radio', 'neuro']);
-        conventionUpdate.onChange(function (value) {
-            camera.convention = value;
-            camera.update();
-            camera.fitBox(2);
-            updateLabels(camera.directionsLabel, stack.modality);
-        });
+            setInvertColumns();
+
+            let angle = cameraFolder.add(camera, 'angle', 0, 360).step(1).listen();
+            angle.onChange(function () {
+                updateLabels(camera.directionsLabel, stack.modality);
+            });
+
+            setRotation();
+
+            function setRotation() {
+                let rotate = cameraFolder.add(camUtils, 'rotate');
+                rotate.onChange(function () {
+                    camera.rotate();
+                    updateLabels(camera.directionsLabel, stack.modality);
+                });
+            }
+
+
+            setOrientation();
+
+            function setOrientation() {
+                let orientationUpdate = cameraFolder.add(
+                    camUtils, 'orientation', ['default', 'axial', 'coronal', 'sagittal']);
+
+                updateOrientation();
+
+                function updateOrientation() {
+                    orientationUpdate.onChange(function (value) {
+                        camera.orientation = value;
+                        camera.update();
+
+                        const numberOfDirectionsToRecalculateCameraZoom = 2;
+                        camera.fitBox(numberOfDirectionsToRecalculateCameraZoom);
+                        stackHelper.orientation = camera.stackOrientation;
+                        updateLabels(camera.directionsLabel, stack.modality);
+
+                        index.__max = stackHelper.orientationMaxIndex;
+                        stackHelper.index = putRotationAnglesSliderAtMediumPointOnGui();
+
+                        function putRotationAnglesSliderAtMediumPointOnGui() {
+                            return Math.floor(index.__max / 2);
+                        }
+                    });
+                }
+
+            }
+
+
+            let conventionUpdate = cameraFolder.add(
+                camUtils, 'convention', ['radio', 'neuro']);
+            conventionUpdate.onChange(function (value) {
+                camera.convention = value;
+                camera.update();
+                camera.fitBox(2);
+                updateLabels(camera.directionsLabel, stack.modality);
+            });
+        }
+
+// camera
     }
 
     /**
