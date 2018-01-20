@@ -321,15 +321,19 @@ window.onload = function () {
 
             }
 
+            setConvention();
 
-            let conventionUpdate = cameraFolder.add(
-                camUtils, 'convention', ['radio', 'neuro']);
-            conventionUpdate.onChange(function (value) {
-                camera.convention = value;
-                camera.update();
-                camera.fitBox(2);
-                updateLabels(camera.directionsLabel, stack.modality);
-            });
+            function setConvention() {
+                let conventionUpdate = cameraFolder.add(
+                    camUtils, 'convention', ['radio', 'neuro']);
+                conventionUpdate.onChange(function (value) {
+                    camera.convention = value;
+                    camera.update();
+                    camera.fitBox(2);
+                    updateLabels(camera.directionsLabel, stack.modality);
+                });
+            }
+
         }
 
 // camera
