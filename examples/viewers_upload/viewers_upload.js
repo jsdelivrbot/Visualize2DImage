@@ -193,25 +193,51 @@ window.onload = function () {
 
 
         // CREATE LUT
-        lut = new HelpersLut(
-            'my-lut-canvases',
-            'default',
-            'linear',
-            [[0, 0, 0, 0], [1, 1, 1, 1]],
-            [[0, 1], [1, 1]]);
-        lut.luts = HelpersLut.presetLuts();
 
-        let lutUpdate = stackFolder.add(
-            stackHelper.slice, 'lut', lut.lutsAvailable());
-        lutUpdate.onChange(function (value) {
-            lut.lut = value;
-            stackHelper.slice.lutTexture = lut.texture;
-        });
-        let lutDiscrete = stackFolder.add(lut, 'discrete', false);
-        lutDiscrete.onChange(function (value) {
-            lut.discrete = value;
-            stackHelper.slice.lutTexture = lut.texture;
-        });
+        setLUT();
+
+        function setLUT() {
+            createLUT();
+
+            function createLUT() {
+                const domTarget = 'my-lut-canvases';
+                const lookUpTable = 'default';
+                const modeToApplyGradientInLut = 'linear_full';
+                const color = [[0, 0, 0, 0], [1, 1, 1, 1]];
+                const opacity = [[0, 1], [1, 1]];
+                lut = new HelpersLut(
+                    domTarget,
+                    lookUpTable,
+                    modeToApplyGradientInLut,
+                    color,
+                    opacity);
+                lut.luts = HelpersLut.presetLuts();
+            }
+
+
+            updateLUT();
+
+            function updateLUT() {
+                let lutUpdate = stackFolder.add(
+                    stackHelper.slice, 'lut', lut.lutsAvailable());
+                lutUpdate.onChange(function (value) {
+                    lut.lut = value;
+                    stackHelper.slice.lutTexture = lut.texture;
+                });
+            }
+
+            discreteLUT();
+
+            function discreteLUT() {
+                let lutDiscrete = stackFolder.add(lut, 'discrete', false);
+                lutDiscrete.onChange(function (value) {
+                    lut.discrete = value;
+                    stackHelper.slice.lutTexture = lut.texture;
+                });
+            }
+
+        }
+
 
         let index = stackFolder.add(
             stackHelper, 'index', 0, stack.dimensionsIJK.z - 1).step(1).listen();
