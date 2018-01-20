@@ -592,15 +592,24 @@ window.onload = function () {
             for (let i = 0; i < files.length; i++) {
                 fetchSequence.push(
                     new Promise((resolve, reject) => {
-                        const myReader = new FileReader();
-                        // should handle errors too...
-                        myReader.addEventListener('load', function (e) {
-                            resolve(e.target.result);
-                        });
-                        myReader.readAsArrayBuffer(files[i].file);
+                        read();
+
+                        function read() {
+                            const myReader = new FileReader();
+                            myReader.addEventListener('load', function (e) {
+                                resolve(e.target.result);
+                            });
+                            myReader.readAsArrayBuffer(files[i].file);
+                        }
+
                     })
                         .then(function (buffer) {
-                            return {url: files[i].file.name, buffer};
+                            return parse();
+
+                            function parse() {
+                                return {url: files[i].file.name, buffer};
+                            }
+
                         })
                 );
             }
@@ -622,55 +631,75 @@ window.onload = function () {
 
         const data = [];
         const dataGroups = [];
-        // convert object into array
-        for (let i = 0; i < evt.target.files.length; i++) {
-            let dataUrl = CoreUtils.parseUrl(evt.target.files[i].name);
-            if (dataUrl.extension.toUpperCase() === 'MHD' ||
-                dataUrl.extension.toUpperCase() === 'RAW') {
-                dataGroups.push(
-                    {
-                        file: evt.target.files[i],
-                        extension: dataUrl.extension.toUpperCase(),
-                    });
-            } else {
-                data.push(evt.target.files[i]);
+
+        convertObjectIntoArray();
+
+        function convertObjectIntoArray() {
+            for (let i = 0; i < evt.target.files.length; i++) {
+                let dataUrl = CoreUtils.parseUrl(evt.target.files[i].name);
+                if (dataUrl.extension.toUpperCase() === 'MHD' ||
+                    dataUrl.extension.toUpperCase() === 'RAW') {
+                    dataGroups.push(
+                        {
+                            file: evt.target.files[i],
+                            extension: dataUrl.extension.toUpperCase(),
+                        });
+                } else {
+                    data.push(evt.target.files[i]);
+                }
             }
         }
 
-        // check if some files must be loaded together
-        if (dataGroups.length === 2) {
-            // if raw/mhd pair
+        if (someFilesMustBeLoadedTogether()) {
+            function someFilesMustBeLoadedTogether() {
+                return dataGroups.length === 2;
+            }
+
             const mhdFile = dataGroups.filter(_filterByExtension.bind(null, 'MHD'));
             const rawFile = dataGroups.filter(_filterByExtension.bind(null, 'RAW'));
-            if (mhdFile.length === 1 &&
-                rawFile.length === 1) {
+            if (thereIsRawMhdPair()) {
+                function thereIsRawMhdPair() {
+                    return mhdFile.length === 1 &&
+                        rawFile.length === 1;
+                }
+
                 loadSequenceContainer.push(
                     loadSequenceGroup(dataGroups)
                 );
             }
         }
+        loadTheRestOfTheFiles();
 
-        // load the rest of the files
-        for (let i = 0; i < data.length; i++) {
-            loadSequenceContainer.push(
-                loadSequence(i, data)
-            );
+        function loadTheRestOfTheFiles() {
+            for (let i = 0; i < data.length; i++) {
+                loadSequenceContainer.push(
+                    loadSequence(i, data)
+                );
+            }
         }
 
-        // run the load sequence
-        // load sequence for all files
-        Promise
-            .all(loadSequenceContainer)
-            .then(function () {
-                handleSeries(seriesContainer);
-            })
-            .catch(function (error) {
-                window.console.log('oops... something went wrong...');
-                window.console.log(error);
-            });
+        runTheLoadSequenceForAllFiles();
+
+        function runTheLoadSequenceForAllFiles() {
+            Promise
+                .all(loadSequenceContainer)
+                .then(function () {
+                    handleSeries(seriesContainer);
+                })
+                .catch(function (error) {
+                    window.console.log('oops... something went wrong...');
+                    window.console.log(error);
+                });
+        }
     }
 
-    // hook up file input listener
-    document.getElementById('filesinput')
-        .addEventListener('change', readMultipleFiles, false);
+    hookUpFileInputListener();
+
+    function hookUpFileInputListener() {
+        document.getElementById('filesinput')
+            .addEventListener('change', readMultipleFiles, false);
+
+    }
 };
+
+
