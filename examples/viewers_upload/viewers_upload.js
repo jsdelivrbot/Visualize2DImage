@@ -238,9 +238,16 @@ window.onload = function () {
 
         }
 
+        let index = setIndex();
+        
+        function setIndex() {
+            const minIndex = 0;
+            const maxIndex = stack.dimensionsIJK.z - 1;
+            let index = stackFolder.add(
+                stackHelper, 'index', minIndex, maxIndex).step(1).listen();
+            return index;
+        }
 
-        let index = stackFolder.add(
-            stackHelper, 'index', 0, stack.dimensionsIJK.z - 1).step(1).listen();
         stackFolder.open();
 
         // camera
