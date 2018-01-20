@@ -84,11 +84,18 @@ function init() {
     }
 
 
-    // controls
-    controls = new ControlsOrthographic(camera, threeD);
-    controls.staticMoving = true;
-    controls.noRotate = true;
-    camera.controls = controls;
+    setControls();
+
+    function setControls() {
+        const object = camera;
+        const domElement = threeD;
+        controls = new ControlsOrthographic(object, domElement);
+        controls.staticMoving = true;
+        controls.noRotate = true;
+        camera.controls = controls;
+    }
+
+// controls
 
     animate();
 }
