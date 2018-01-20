@@ -1,36 +1,51 @@
 /* globals AMI*/
 
 
-var container = getElementToContainProgressBar();
+const container = getElementToContainProgressBar();
 
 function getElementToContainProgressBar() {
-    var container = document.getElementById('container');
-    return container;
+    return document.getElementById('container');
 }
 
 
-// instantiate the loader
-var loader = getLoader();
+let loader = getLoader();
 
 function getLoader() {
-    var loader = new AMI.VolumeLoader(container);
-    return loader;
+    return new AMI.VolumeLoader(container);
 }
 
-var t2 = setDataURLTermination();
+const t2 = setDataURLTermination();
 
 function setDataURLTermination() {
-    var t2 = ['36444280', '36444294', '36444308', '36444322', '36444336'];
-    return t2;
+    return [
+        '36444280',
+        '36444294',
+        '36444308',
+        '36444322',
+        '36444336',
+        '36444350',
+        '36444364',
+        '36444378',
+        '36444392',
+        '36444406',
+        '36444434',
+        '36444448',
+        '36444462',
+        '36444476',
+        '36444490',
+        '36444504',
+        '36444518',
+        '36444532',
+        '36746856'
+    ];
 }
 
-var files = getFiles();
+const files = getFiles();
 
 function getFiles() {
-    var files = t2.map(function (currentTermination) {
+    return t2.map(function (currentTermination) {
         return 'https://cdn.rawgit.com/FNNDSC/data/master/dicom/adi_brain/' + currentTermination;
     });
-    return files;
 }
 
 
@@ -38,12 +53,9 @@ loader
     .load(files)
     .then(function () {
 
-        var series = loader.data[0].mergeSeries(loader.data);
+        const series = loader.data[0].mergeSeries(loader.data);
         loader.free();
         loader = null;
-
-
-        //window.console.log(series);
 
         displaySeriesInfo(series);
     })
@@ -53,9 +65,9 @@ loader
     });
 
 function displaySeriesInfo(series) {
-    var seriesIndex = 1;
-    for (var mySeries of series) {
-        var seriesDiv = document.createElement('div');
+    let seriesIndex = 1;
+    for (let mySeries of series) {
+        let seriesDiv = document.createElement('div');
         seriesDiv.className += 'indent';
         seriesDiv.insertAdjacentHTML('beforeend', '<div> SERIES (' + seriesIndex + '/' + series.length + ')</div>');
         seriesDiv.insertAdjacentHTML(
@@ -65,7 +77,7 @@ function displaySeriesInfo(series) {
 
         container.appendChild(seriesDiv);
 
-        var {stackIndex, stackDiv} = displayStackInfo(mySeries, seriesDiv);
+        displayStackInfo(mySeries, seriesDiv);
 
         seriesIndex++;
     }
@@ -73,9 +85,9 @@ function displaySeriesInfo(series) {
 
 
 function displayStackInfo(mySeries, seriesDiv) {
-    var stackIndex = 1;
-    for (var myStack of mySeries.stack) {
-        var stackDiv = document.createElement('div');
+    let stackIndex = 1;
+    for (let myStack of mySeries.stack) {
+        let stackDiv = document.createElement('div');
         stackDiv.className += 'indent';
         stackDiv.insertAdjacentHTML(
             'beforeend',
@@ -88,7 +100,7 @@ function displayStackInfo(mySeries, seriesDiv) {
 
         seriesDiv.appendChild(stackDiv);
 
-        var {frameIndex, frameDiv} = displayFrameInfo(myStack, stackDiv);
+        displayFrameInfo(myStack, stackDiv);
 
         stackIndex++;
     }
@@ -96,9 +108,9 @@ function displayStackInfo(mySeries, seriesDiv) {
 }
 
 function displayFrameInfo(myStack, stackDiv) {
-    var frameIndex = 1;
-    for (var myFrame of myStack.frame) {
-        var frameDiv = document.createElement('div');
+    let frameIndex = 1;
+    for (let myFrame of myStack.frame) {
+        let frameDiv = document.createElement('div');
         frameDiv.className += 'indent';
         frameDiv.insertAdjacentHTML(
             'beforeend',
@@ -112,5 +124,5 @@ function displayFrameInfo(myStack, stackDiv) {
         stackDiv.appendChild(frameDiv);
         frameIndex++;
     }
-    return {frameIndex, frameDiv};
+    return {frameIndex};
 }
