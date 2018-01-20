@@ -95,16 +95,17 @@ function init() {
         camera.controls = controls;
     }
 
-// controls
-
     animate();
 }
 
 window.onload = function () {
-    // hookup load button
-    document.getElementById('buttoninput').onclick = function () {
-        document.getElementById('filesinput').click();
-    };
+    setFileInputOnButtonClick();
+
+    function setFileInputOnButtonClick() {
+        document.getElementById('buttoninput').onclick = function () {
+            document.getElementById('filesinput').click();
+        };
+    }
 
     // init threeJS...
     init();
