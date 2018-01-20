@@ -529,8 +529,16 @@ window.onload = function () {
      * Parse incoming files
      */
     function readMultipleFiles(evt) {
-        // hide the upload button
-        if (evt.target.files.length) {
+
+        if (filesHaveBeenLoaded()) {
+            hideFileUploadButton();
+        }
+
+        function filesHaveBeenLoaded() {
+            return evt.target.files.length;
+        }
+
+        function hideFileUploadButton() {
             document.getElementById('home-container').style.display = 'none';
         }
 
@@ -539,22 +547,35 @@ window.onload = function () {
          */
         function loadSequence(index, files) {
             return Promise.resolve()
-            // load the file
                 .then(function () {
-                    return new Promise(function (resolve, reject) {
-                        let myReader = new FileReader();
-                        // should handle errors too...
-                        myReader.addEventListener('load', function (e) {
-                            resolve(e.target.result);
+
+                    return read();
+
+                    function read() {
+                        return new Promise(function (resolve, reject) {
+                            let myReader = new FileReader();
+                            myReader.addEventListener('load', function (e) {
+                                resolve(e.target.result);
+                            });
+                            myReader.readAsArrayBuffer(files[index]);
                         });
-                        myReader.readAsArrayBuffer(files[index]);
-                    });
+                    }
                 })
                 .then(function (buffer) {
-                    return loader.parse({url: files[index].name, buffer});
+                    return parse();
+
+                    function parse() {
+                        return loader.parse({url: files[index].name, buffer});
+                    }
+
                 })
                 .then(function (series) {
-                    seriesContainer.push(series);
+                    load();
+
+                    function load() {
+                        seriesContainer.push(series);
+                    }
+
                 })
                 .catch(function (error) {
                     window.console.log('oops... something went wrong...');
