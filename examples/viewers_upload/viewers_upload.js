@@ -650,18 +650,19 @@ window.onload = function () {
             }
         }
 
+        function someFilesMustBeLoadedTogether() {
+            return dataGroups.length === 2;
+        }
         if (someFilesMustBeLoadedTogether()) {
-            function someFilesMustBeLoadedTogether() {
-                return dataGroups.length === 2;
-            }
 
             const mhdFile = dataGroups.filter(_filterByExtension.bind(null, 'MHD'));
             const rawFile = dataGroups.filter(_filterByExtension.bind(null, 'RAW'));
+
+            function thereIsRawMhdPair() {
+                return mhdFile.length === 1 &&
+                    rawFile.length === 1;
+            }
             if (thereIsRawMhdPair()) {
-                function thereIsRawMhdPair() {
-                    return mhdFile.length === 1 &&
-                        rawFile.length === 1;
-                }
 
                 loadSequenceContainer.push(
                     loadSequenceGroup(dataGroups)
